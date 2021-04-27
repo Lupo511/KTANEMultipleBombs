@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
+  m_Name: ModConfig
+  m_EditorClassIdentifier: 
+  id: MultipleBombs
+  title: Multiple Bombs
+  author: Lupo511
+  description: "What's better than a bomb? Two bombs! Take your multitasking skills
+    to a new level by defusing two independent bombs at the same time! Two separate
+    serials, two separate widget collections, two separate timers, and more!\r\nYou
+    can easily change the mod settings from an option in the Free Play menu.\r\nAlso,
+    it can work together with custom bomb casings and custom gameplay rooms, so that
+    you can have total control over customization!\r\n\r\n[h1]For mod developers[/h1]\r\nThe
+    mod exposes various APIs that other mod developers can use. For example it allows
+    to customize bomb spanws in a Gameplay Room, to build missions with multiple bombs
+    and much more!\nTo learn how to use it and for explanation about all of its features
+    read the API Docs at [url=https://lupo511.github.io/ktanemods/MultipleBombs/docs/]https://lupo511.github.io/ktanemods/MultipleBombs/docs/[/url]."
+  version: 1.4.5
+  outputFolder: build
+  previewImage: {fileID: 2800000, guid: be95b037aca480441806d4efa6da4ce2, type: 3}
