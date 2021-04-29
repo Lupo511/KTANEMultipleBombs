@@ -33,7 +33,7 @@ def build(config):
 
     print("Building mod bundle...")
     #Apparently projectPath value has to be passed in the same argument while executeMethod value has to be passed in the next argument
-    result = subprocess.run([config["unityPath"], "-batchmode", "-quit", "-projectPath ./MultipleBombs/", "-executeMethod", "AssetBundler.BuildAllAssetBundles_WithEditorUtility"])
+    result = subprocess.run([config["unityPath"], "-batchmode", "-quit", "-projectPath ./MultipleBombs/", "-executeMethod", "AssetBundler.BuildAllAssetBundles_WithEditorUtility", "-logFile", "-"])
     print("Mod bundle build completed")
 
     print("Copying to build directory...")
