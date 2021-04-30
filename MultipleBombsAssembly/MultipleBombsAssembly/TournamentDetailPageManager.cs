@@ -70,7 +70,7 @@ namespace MultipleBombsAssembly
 
             //Read the mission and update the page data
             Mission currentMission = (Mission)currentMissionField.GetValue(page);
-            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, multipleBombs.GetCurrentMaximumBombCount(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
+            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, MultipleBombsModManager.GetMaximumBombs(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
             canStartField.SetValue(page, canStart);
         }
     }

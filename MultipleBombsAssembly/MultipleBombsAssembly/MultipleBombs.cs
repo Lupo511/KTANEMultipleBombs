@@ -93,21 +93,8 @@ namespace MultipleBombsAssembly
                 if (state == KMGameInfo.State.Setup)
                 {
                     currentStateManager = new MultipleBombsSetupStateManager(this, SceneManager.Instance.SetupState);
-                    StartCoroutine(setupSetupRoom());
                 }
             }
-        }
-
-        private IEnumerator setupSetupRoom()
-        {
-            yield return null;
-
-            multipleBombsRooms = new Dictionary<GameplayRoom, int>();
-            foreach (GameplayRoom room in ModManager.Instance.GetGameplayRooms())
-            {
-                multipleBombsRooms.Add(room, getRoomSupportedBombCount(room));
-            }
-            Debug.Log("[MultipleBombs]GamePlayRooms processed");
         }
 
         private IEnumerator setupGameplayState()
@@ -131,7 +118,7 @@ namespace MultipleBombsAssembly
                 missionDetails = MultipleBombsMissionDetails.ReadMission(mission, true, out multipleBombsComponentPools);
             }
 
-            int maximumBombCount = GetCurrentMaximumBombCount();
+            int maximumBombCount = MultipleBombsModManager.GetMaximumBombs();
             if (missionDetails.BombCount > maximumBombCount)
             {
                 Debug.Log("[MultipleBombs]Bomb count greater than the maximum bomb count (" + missionDetails.BombCount + " bombs, " + maximumBombCount + " maximum)");
@@ -583,38 +570,6 @@ namespace MultipleBombsAssembly
             }
         }
 
-        private int getRoomSupportedBombCount(GameplayRoom gameplayRoom)
-        {
-            if (gameplayRoom.GetComponent<ElevatorRoom>() != null)
-                return 1;
-            for (int i = 2; i < int.MaxValue; i++)
-            {
-                if (!gameplayRoom.transform.FindRecursive("MultipleBombs_Spawn_" + i))
-                {
-                    return i;
-                }
-            }
-            return int.MaxValue;
-        }
-
-        public int GetCurrentMaximumBombCount()
-        {
-            if (GameplayState.GameplayRoomPrefabOverride != null)
-            {
-                return getRoomSupportedBombCount(GameplayState.GameplayRoomPrefabOverride.GetComponent<GameplayRoom>());
-            }
-            else
-            {
-                int max = 2;
-                foreach (int count in multipleBombsRooms.Values)
-                {
-                    if (count > max)
-                        max = count;
-                }
-                return max;
-            }
-        }
-
         public int CurrentFreePlayBombCount
         {
             get
@@ -630,7 +585,7 @@ namespace MultipleBombsAssembly
                     throw new InvalidOperationException("You can only set the current FreePlay bomb count in the Setup room.");
                 if (value < 1)
                     throw new Exception("The bomb count must be greater than 0.");
-                if (value > GetCurrentMaximumBombCount())
+                if (value > MultipleBombsModManager.GetMaximumBombs())
                     throw new Exception("The specified bomb count is greater than the current maximum bomb count.");
                 ((MultipleBombsSetupStateManager)currentStateManager).FreeplayDeviceManager.FreeplayBombCount = value;
             }

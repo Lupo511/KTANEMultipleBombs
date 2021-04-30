@@ -14,6 +14,7 @@ namespace MultipleBombsAssembly
         private MultipleBombs multipleBombs;
         private MultipleBombsFreeplaySettings freeplaySettings;
         private TextMeshPro bombsValue;
+        private int maxBombs;
         private static float? vanillaMaxSecondsToSolve;
         private int maxModBombModules;
 
@@ -23,6 +24,7 @@ namespace MultipleBombsAssembly
 
             freeplaySettings = multipleBombs.LastFreeplaySettings;
 
+            maxBombs = MultipleBombsModManager.GetMaximumBombs();
             if (vanillaMaxSecondsToSolve == null)
                 vanillaMaxSecondsToSolve = FreeplayDevice.MAX_SECONDS_TO_SOLVE;
             maxModBombModules = ModManager.Instance.GetMaximumModules();
@@ -99,7 +101,7 @@ namespace MultipleBombsAssembly
 
             incrementButton.GetComponent<KeypadButton>().OnPush = new PushEvent(() =>
             {
-                if (freeplaySettings.BombCount >= multipleBombs.GetCurrentMaximumBombCount())
+                if (freeplaySettings.BombCount >= maxBombs)
                     return;
                 freeplaySettings.BombCount++;
                 bombsValue.text = freeplaySettings.BombCount.ToString();
@@ -185,13 +187,13 @@ namespace MultipleBombsAssembly
         public void Update()
         {
             //Check max bomb count limit
-            int maxBombCount = multipleBombs.GetCurrentMaximumBombCount();
-            if (freeplaySettings.BombCount > maxBombCount)
-                freeplaySettings.BombCount = maxBombCount;
+            if (freeplaySettings.BombCount > maxBombs)
+                freeplaySettings.BombCount = maxBombs;
 
+            //To-do: should this be in update? And isn't it better to patch the increase time button push?
             //Update Freeplay max time
             //First we multiply the vanilla max time by the max bomb count
-            float newMaxTime = vanillaMaxSecondsToSolve.Value * maxBombCount;
+            float newMaxTime = vanillaMaxSecondsToSolve.Value * maxBombs;
             //Then we also add 60 seconds per additional max module per bomb
             int maxModules = maxModBombModules;
             if (GameplayState.GameplayRoomPrefabOverride != null && GameplayState.GameplayRoomPrefabOverride.GetComponent<GameplayRoom>().BombPrefabOverride != null)
@@ -202,7 +204,7 @@ namespace MultipleBombsAssembly
             if (maxModules > FreeplayDevice.MAX_MODULE_COUNT)
             {
                 newMaxTime += (maxModules - FreeplayDevice.MAX_MODULE_COUNT) * 60 *
-                              (maxBombCount - 1);
+                              (maxBombs - 1);
             }
             //Finally update the max seconds to solve field
             FreeplayDevice.MAX_SECONDS_TO_SOLVE = newMaxTime;
