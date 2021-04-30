@@ -11,16 +11,32 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class TournamentDetailPageMonitor : MonoBehaviour
+    public class TournamentDetailPageManager : MonoBehaviour
     {
-        public MultipleBombs MultipleBombs { get; set; }
+        private static FieldInfo currentMissionField;
+        private static FieldInfo canStartField;
+        private MultipleBombs multipleBombs;
         private TournamentDetailPage page;
         private TextMeshPro textBombs;
-        private FieldInfo canStartField = typeof(TournamentDetailPage).GetField("canStartMission", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private void Awake()
+        static TournamentDetailPageManager()
         {
+            currentMissionField = typeof(MissionDetailPage).BaseType.GetField("currentMission", BindingFlags.Instance | BindingFlags.NonPublic);
+            canStartField = typeof(MissionDetailPage).GetField("canStartMission", BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+
+        public void Initialize(MultipleBombs multipleBombs)
+        {
+            this.multipleBombs = multipleBombs;
+
             page = GetComponent<TournamentDetailPage>();
+
+            //Add the mission bomb count label by cloning and modifying the strikes label
+            textBombs = Instantiate(page.TextStrikes, page.TextStrikes.transform.position, page.TextStrikes.transform.rotation, page.TextStrikes.transform.parent);
+            textBombs.gameObject.SetActive(false);
+            Destroy(textBombs.GetComponent<Localize>());
+            textBombs.transform.localPosition += new Vector3(0, 0.012f, 0);
+            textBombs.text = "X Bombs";
         }
 
         private void OnEnable()
@@ -31,18 +47,17 @@ namespace MultipleBombsAssembly
         private void OnDisable()
         {
             StopAllCoroutines();
-            if (textBombs != null)
-                textBombs.gameObject.SetActive(false);
+            textBombs.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            if (textBombs != null)
-                Destroy(textBombs);
+            Destroy(textBombs);
         }
 
         private IEnumerator setupPage()
         {
+            //Make the page invisible while waiting for the modifications to avoid a visible flickering of the values
             page.TextDescription.gameObject.SetActive(false);
             page.TextTime.gameObject.SetActive(false);
             page.TextModuleCount.gameObject.SetActive(false);
@@ -52,18 +67,10 @@ namespace MultipleBombsAssembly
             page.TextTime.gameObject.SetActive(true);
             page.TextModuleCount.gameObject.SetActive(true);
             page.TextStrikes.gameObject.SetActive(true);
-            if (textBombs == null)
-            {
-                textBombs = Instantiate(page.TextStrikes, page.TextStrikes.transform.position, page.TextStrikes.transform.rotation, page.TextStrikes.transform.parent);
-                textBombs.gameObject.SetActive(false);
-                Destroy(textBombs.GetComponent<Localize>());
-                textBombs.transform.localPosition += new Vector3(0, 0.012f, 0);
-                textBombs.text = "X Bombs";
-            }
 
-            Mission currentMission = (Mission)page.GetType().GetField("currentMission", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(page);
-
-            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, MultipleBombs.GetCurrentMaximumBombCount(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
+            //Read the mission and update the page data
+            Mission currentMission = (Mission)currentMissionField.GetValue(page);
+            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, multipleBombs.GetCurrentMaximumBombCount(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
             canStartField.SetValue(page, canStart);
         }
     }

@@ -23,10 +23,11 @@ namespace MultipleBombsAssembly
 
             MissionDetailPageManager missionDetailPageMonitor = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageManager>();
             missionDetailPageMonitor.Initialize(multipleBombs);
+
             if (setupRoom.TournamentWhiteboard != null)
             {
-                TournamentDetailPageMonitor tournamentDetailPageMonitor = setupRoom.TournamentWhiteboard.TournamentDetailPage.gameObject.AddComponent<TournamentDetailPageMonitor>();
-                tournamentDetailPageMonitor.MultipleBombs = multipleBombs;
+                TournamentDetailPageManager tournamentDetailPageMonitor = setupRoom.TournamentWhiteboard.TournamentDetailPage.gameObject.AddComponent<TournamentDetailPageManager>();
+                tournamentDetailPageMonitor.Initialize(multipleBombs);
             }
 
             Debug.Log("[MultipleBombs]Setup state set up");
