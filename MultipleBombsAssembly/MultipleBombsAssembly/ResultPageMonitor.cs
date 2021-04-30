@@ -77,7 +77,7 @@ namespace MultipleBombsAssembly
                     numBombs.text = "X Bombs";
                 }
 
-                MissionDetailPageMonitor.UpdateMissionDetailInformation(currentMission, null, MultipleBombs.GetCurrentMaximumBombCount(), null, page.InitialTime, page.NumModules, page.NumStrikes, numBombs);
+                MissionDetailPageManager.UpdateMissionDetailInformation(currentMission, null, MultipleBombs.GetCurrentMaximumBombCount(), null, page.InitialTime, page.NumModules, page.NumStrikes, numBombs);
             }
         }
 

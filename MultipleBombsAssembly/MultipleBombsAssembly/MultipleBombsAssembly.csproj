@@ -83,7 +83,7 @@
     <Compile Include="MultipleBombsMissionDetails.cs" />
     <Compile Include="MultipleBombsProperties.cs" />
     <Compile Include="PropertiesBehaviour.cs" />
-    <Compile Include="MissionDetailPageMonitor.cs" />
+    <Compile Include="MissionDetailPageManager.cs" />
     <Compile Include="MultipleBombs.cs" />
     <Compile Include="PaceMakerMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,8 +21,8 @@ namespace MultipleBombsAssembly
             FreeplayDeviceManager = setupRoom.FreeplayDevice.gameObject.AddComponent<FreeplayDeviceManager>();
             FreeplayDeviceManager.Initialize(multipleBombs);
 
-            MissionDetailPageMonitor missionDetailPageMonitor = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageMonitor>();
-            missionDetailPageMonitor.MultipleBombs = multipleBombs;
+            MissionDetailPageManager missionDetailPageMonitor = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageManager>();
+            missionDetailPageMonitor.Initialize(multipleBombs);
             if (setupRoom.TournamentWhiteboard != null)
             {
                 TournamentDetailPageMonitor tournamentDetailPageMonitor = setupRoom.TournamentWhiteboard.TournamentDetailPage.gameObject.AddComponent<TournamentDetailPageMonitor>();
