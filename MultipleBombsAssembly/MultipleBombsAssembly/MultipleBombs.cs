@@ -22,7 +22,6 @@ namespace MultipleBombsAssembly
         private IMultipleBombsStateManager currentStateManager;
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
         public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
-        private Dictionary<GameplayRoom, int> multipleBombsRooms;
         private FieldInfo gameplayStateRoomGOField;
         private FieldInfo gameplayStateLightBulbField;
         private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
@@ -37,7 +36,6 @@ namespace MultipleBombsAssembly
             Debug.Log("[MultipleBombs]Initializing");
             DestroyImmediate(GetComponent<KMService>()); //Hide from Mod Selector
             LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
-            multipleBombsRooms = new Dictionary<GameplayRoom, int>();
             gameplayStateRoomGOField = typeof(GameplayState).GetField("roomGO", BindingFlags.Instance | BindingFlags.NonPublic);
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
             gameInfo = GetComponent<KMGameInfo>();
@@ -119,24 +117,17 @@ namespace MultipleBombsAssembly
             }
 
             int maximumBombCount = MultipleBombsModManager.GetMaximumBombs();
-            if (missionDetails.BombCount > maximumBombCount)
-            {
-                Debug.Log("[MultipleBombs]Bomb count greater than the maximum bomb count (" + missionDetails.BombCount + " bombs, " + maximumBombCount + " maximum)");
-                SceneManager.Instance.ReturnToSetupState();
-                yield break;
-            }
-            else if (missionDetails.BombCount > 1 && GameplayState.GameplayRoomPrefabOverride == null)
+            if (missionDetails.BombCount > 1 && GameplayState.GameplayRoomPrefabOverride == null)
             {
                 Debug.Log("[MultipleBombs]Initializing room");
                 List<GameplayRoom> rooms = new List<GameplayRoom>();
-                if (missionDetails.BombCount <= 2)
-                    rooms.Add(SceneManager.Instance.GameplayState.GameplayRoomPool.Default.GetComponent<GameplayRoom>());
-                foreach (KeyValuePair<GameplayRoom, int> room in multipleBombsRooms)
+                foreach (GameObject gameplayRoomObject in SceneManager.Instance.GameplayState.GameplayRoomPool.Objects)
                 {
-                    if (room.Value >= missionDetails.BombCount)
-                        rooms.Add(room.Key);
+                    GameplayRoom gameplayRoom = gameplayRoomObject.GetComponent<GameplayRoom>();
+                    if (missionDetails.BombCount <= MultipleBombsModManager.GetRoomSupportedBombCount(gameplayRoom))
+                        rooms.Add(gameplayRoom);
                 }
-                if (rooms.Count == 0)
+                if (rooms.Count == 0) //To-do: match game behaviour and use default room with less bombs if no room is available?
                 {
                     Debug.Log("[MultipleBombs]No room found that supports " + missionDetails.BombCount + " bombs");
                     SceneManager.Instance.ReturnToSetupState();
