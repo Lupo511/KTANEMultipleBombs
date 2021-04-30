@@ -75,7 +75,7 @@
     <Compile Include="BombInfoRedirection.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="FreeplayDeviceManager.cs" />
-    <Compile Include="GameplayMusicControllerMonitor.cs" />
+    <Compile Include="GameplayMusicControllerManager.cs" />
     <Compile Include="IMultipleBombsStateManager.cs" />
     <Compile Include="MultipleBombsFreeplaySettings.cs" />
     <Compile Include="MultipleBombsSetupStateManager.cs" />

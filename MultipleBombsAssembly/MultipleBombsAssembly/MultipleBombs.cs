@@ -21,7 +21,7 @@ namespace MultipleBombsAssembly
     {
         private IMultipleBombsStateManager currentStateManager;
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
-        public GameplayMusicControllerMonitor GameplayMusicControllerMonitor { get; set; }
+        public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
         private Dictionary<GameplayRoom, int> multipleBombsRooms;
         private FieldInfo gameplayStateRoomGOField;
         private FieldInfo gameplayStateLightBulbField;
@@ -51,7 +51,7 @@ namespace MultipleBombsAssembly
 
             Debug.Log("[MultipleBombs]Basic initialization finished");
 
-            GameplayMusicControllerMonitor = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerMonitor>();
+            GameplayMusicControllerManager = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerManager>();
 
             Debug.Log("[MultipleBombs]Initialized");
         }
@@ -68,8 +68,8 @@ namespace MultipleBombsAssembly
                 throw new NotImplementedException();
             Debug.Log("[MultipleBombs]Destroying");
             gameInfo.OnStateChange -= onGameStateChanged;
-            if (GameplayMusicControllerMonitor != null)
-                Destroy(GameplayMusicControllerMonitor);
+            if (GameplayMusicControllerManager != null)
+                Destroy(GameplayMusicControllerManager);
             Debug.Log("[MultipleBombs]Destroyed");
         }
 

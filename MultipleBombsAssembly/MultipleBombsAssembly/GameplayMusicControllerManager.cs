@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class GameplayMusicControllerMonitor : MonoBehaviour
+    public class GameplayMusicControllerManager : MonoBehaviour
     {
         private static FieldInfo isPlayingField;
         private static FieldInfo stingerResultField;
@@ -17,7 +17,7 @@ namespace MultipleBombsAssembly
         private bool stingerPlayed;
         private int currentSongIndex;
 
-        static GameplayMusicControllerMonitor()
+        static GameplayMusicControllerManager()
         {
             isPlayingField = typeof(GameplayMusicController).GetField("isPlaying", BindingFlags.Instance | BindingFlags.NonPublic);
             stingerResultField = typeof(GameplayMusicController).GetField("stingerResult", BindingFlags.Instance | BindingFlags.NonPublic);
