@@ -21,13 +21,13 @@ namespace MultipleBombsAssembly
             FreeplayDeviceManager = setupRoom.FreeplayDevice.gameObject.AddComponent<FreeplayDeviceManager>();
             FreeplayDeviceManager.Initialize(multipleBombs);
 
-            MissionDetailPageManager missionDetailPageMonitor = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageManager>();
-            missionDetailPageMonitor.Initialize(multipleBombs);
+            MissionDetailPageManager missionDetailPageManager = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageManager>();
+            missionDetailPageManager.Initialize(multipleBombs);
 
             if (setupRoom.TournamentWhiteboard != null)
             {
-                TournamentDetailPageManager tournamentDetailPageMonitor = setupRoom.TournamentWhiteboard.TournamentDetailPage.gameObject.AddComponent<TournamentDetailPageManager>();
-                tournamentDetailPageMonitor.Initialize(multipleBombs);
+                TournamentDetailPageManager tournamentDetailPageManager = setupRoom.TournamentWhiteboard.TournamentDetailPage.gameObject.AddComponent<TournamentDetailPageManager>();
+                tournamentDetailPageManager.Initialize(multipleBombs);
             }
 
             Debug.Log("[MultipleBombs]Setup state set up");
