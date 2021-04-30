@@ -79,7 +79,7 @@
     <Compile Include="IMultipleBombsStateManager.cs" />
     <Compile Include="MultipleBombsFreeplaySettings.cs" />
     <Compile Include="MultipleBombsSetupStateManager.cs" />
-    <Compile Include="TournamentDetailPageMonitor.cs" />
+    <Compile Include="TournamentDetailPageManager.cs" />
     <Compile Include="MultipleBombsMissionDetails.cs" />
     <Compile Include="MultipleBombsProperties.cs" />
     <Compile Include="PropertiesBehaviour.cs" />
