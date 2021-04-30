@@ -21,13 +21,13 @@ namespace MultipleBombsAssembly
     {
         private IMultipleBombsStateManager currentStateManager;
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
+        public GameplayMusicControllerMonitor GameplayMusicControllerMonitor { get; set; }
         private Dictionary<GameplayRoom, int> multipleBombsRooms;
         private FieldInfo gameplayStateRoomGOField;
         private FieldInfo gameplayStateLightBulbField;
         private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentPassEvent> bombComponentPassEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent> bombComponentStrikeEvents;
-        private GameplayMusicControllerMonitor gameplayMusicControllerMonitor;
         private KMGameInfo gameInfo;
         private KMGameCommands gameCommands;
         private MultipleBombsProperties publicProperties;
@@ -51,7 +51,7 @@ namespace MultipleBombsAssembly
 
             Debug.Log("[MultipleBombs]Basic initialization finished");
 
-            gameplayMusicControllerMonitor = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerMonitor>();
+            GameplayMusicControllerMonitor = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerMonitor>();
 
             Debug.Log("[MultipleBombs]Initialized");
         }
@@ -68,8 +68,8 @@ namespace MultipleBombsAssembly
                 throw new NotImplementedException();
             Debug.Log("[MultipleBombs]Destroying");
             gameInfo.OnStateChange -= onGameStateChanged;
-            if (gameplayMusicControllerMonitor != null)
-                Destroy(gameplayMusicControllerMonitor);
+            if (GameplayMusicControllerMonitor != null)
+                Destroy(GameplayMusicControllerMonitor);
             Debug.Log("[MultipleBombs]Destroyed");
         }
 
@@ -168,8 +168,6 @@ namespace MultipleBombsAssembly
                     FindObjectOfType<BombGenerator>().BombPrefabOverride = room.GetComponent<GameplayRoom>().BombPrefabOverride;
                     Debug.Log("[MultipleBombs]Room initialized");
                 }
-
-                gameplayMusicControllerMonitor.NewRoundStarted();
             }
 
             BombInfoRedirection.SetBombCount(missionDetails.BombCount);

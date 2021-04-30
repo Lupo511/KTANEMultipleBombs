@@ -10,20 +10,23 @@ namespace MultipleBombsAssembly
 {
     public class GameplayMusicControllerMonitor : MonoBehaviour
     {
+        private static FieldInfo isPlayingField;
+        private static FieldInfo stingerResultField;
         private GameplayMusicController gameplayMusicController;
         private PlaylistController playlistController;
-        private FieldInfo isPlayingField;
-        private FieldInfo stingerResultField;
-        private string currentStinger;
         private bool stingerPlayed;
         private int currentSongIndex;
+
+        static GameplayMusicControllerMonitor()
+        {
+            isPlayingField = typeof(GameplayMusicController).GetField("isPlaying", BindingFlags.Instance | BindingFlags.NonPublic);
+            stingerResultField = typeof(GameplayMusicController).GetField("stingerResult", BindingFlags.Instance | BindingFlags.NonPublic);
+        }
 
         public void Awake()
         {
             gameplayMusicController = GetComponent<GameplayMusicController>();
             playlistController = GetComponent<PlaylistController>();
-            isPlayingField = gameplayMusicController.GetType().GetField("isPlaying", BindingFlags.Instance | BindingFlags.NonPublic);
-            stingerResultField = gameplayMusicController.GetType().GetField("stingerResult", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
         public void Start()
@@ -36,13 +39,9 @@ namespace MultipleBombsAssembly
             gameplayMusicController.enabled = true;
         }
 
-        public void NewRoundStarted()
-        {
-            currentStinger = gameplayMusicController.Settings.StingerName;
-        }
-
         public void Update()
         {
+            //Sets the current song index and plays the stinger considering the timer of all of the bombs
             if (gameplayMusicController.Settings.PlaylistName != string.Empty && SceneManager.Instance != null && SceneManager.Instance.GameplayState != null && (bool)isPlayingField.GetValue(gameplayMusicController))
             {
                 float timeRemaining = float.MaxValue;
@@ -54,29 +53,29 @@ namespace MultipleBombsAssembly
                     {
                         if (bomb.GetTimer().TimeRemaining < timeRemaining)
                             timeRemaining = bomb.GetTimer().TimeRemaining;
+
                         if (!stingerTime)
                             stingerTime = bomb.GetTimer().TimeRemaining < 30f + bomb.GetTimer().GetRate() * gameplayMusicController.Settings.StingerTime;
                     }
+
                     if (bomb.TotalTime < totalTime)
                         totalTime = bomb.TotalTime;
                 }
-                if (currentStinger != null && currentStinger != string.Empty)
+
+                if (!string.IsNullOrEmpty(gameplayMusicController.Settings.StingerName) && stingerTime && !stingerPlayed)
                 {
-                    if (stingerTime && !stingerPlayed)
-                    {
-                        if (gameplayMusicController.Settings.StingerName != null && gameplayMusicController.Settings.StingerName != string.Empty) //To make sure it's as consistent as possible with vanilla behaviour
-                            gameplayMusicController.Settings.StingerName = null;
-                        stingerResultField.SetValue(gameplayMusicController, MasterAudio.PlaySound3DAtTransform(currentStinger, transform, 1f, null, 0f, null, false, false));
-                        stingerPlayed = true;
-                    }
-                    if (!stingerTime && stingerPlayed)
-                    {
-                        PlaySoundResult stingerResult = (PlaySoundResult)stingerResultField.GetValue(gameplayMusicController);
-                        if (stingerResult != null && stingerResult.ActingVariation != null)
-                            stingerResult.ActingVariation.Stop();
-                        stingerPlayed = false;
-                    }
+                    stingerResultField.SetValue(gameplayMusicController, MasterAudio.PlaySound3DAtTransform(gameplayMusicController.Settings.StingerName, transform, 1f, null, 0f, null, false, false));
+                    stingerPlayed = true;
                 }
+
+                if (!stingerTime && stingerPlayed)
+                {
+                    PlaySoundResult stingerResult = (PlaySoundResult)stingerResultField.GetValue(gameplayMusicController);
+                    if (stingerResult != null && stingerResult.ActingVariation != null)
+                        stingerResult.ActingVariation.Stop();
+                    stingerPlayed = false;
+                }
+
                 if (timeRemaining < 30f)
                 {
                     if (currentSongIndex != playlistController.CurrentPlaylist.MusicSettings.Count - 1)
@@ -88,7 +87,7 @@ namespace MultipleBombsAssembly
                 }
                 else
                 {
-                    int newSongIndex = 0;
+                    int newSongIndex;
                     float timeRatio = timeRemaining / totalTime;
                     if (gameplayMusicController.Settings.useCrossfade)
                     {
