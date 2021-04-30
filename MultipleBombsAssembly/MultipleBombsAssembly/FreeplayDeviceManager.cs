@@ -23,15 +23,15 @@ namespace MultipleBombsAssembly
             this.multipleBombs = multipleBombs;
 
             freeplaySettings = multipleBombs.LastFreeplaySettings;
-
-            maxBombs = MultipleBombsModManager.GetMaximumBombs();
-            if (vanillaMaxSecondsToSolve == null)
-                vanillaMaxSecondsToSolve = FreeplayDevice.MAX_SECONDS_TO_SOLVE;
-            maxModBombModules = ModManager.Instance.GetMaximumModules();
         }
 
         public IEnumerator Start()
         {
+            maxBombs = MultipleBombsModManager.GetMaximumBombs();
+            if (vanillaMaxSecondsToSolve == null)
+                vanillaMaxSecondsToSolve = FreeplayDevice.MAX_SECONDS_TO_SOLVE;
+            maxModBombModules = ModManager.Instance.GetMaximumModules();
+
             Debug.Log("[MultipleBombs]Adding FreePlay option");
 
             FreeplayDevice freeplayDevice = GetComponent<FreeplayDevice>();
