@@ -80,7 +80,7 @@ namespace MultipleBombsAssembly
         {
             get
             {
-                if (gameManager.CurrentState is MultipleBombsSetupStateManager setupStateManager)
+                if (gameManager.CurrentState is SetupStateManager setupStateManager)
                     return setupStateManager.FreeplayDeviceManager.FreeplayBombCount;
                 else
                     return LastFreeplaySettings.BombCount;
@@ -93,7 +93,7 @@ namespace MultipleBombsAssembly
                     throw new Exception("The bomb count must be greater than 0.");
                 if (value > MultipleBombsModManager.GetMaximumBombs())
                     throw new Exception("The specified bomb count is greater than the current maximum bomb count.");
-                ((MultipleBombsSetupStateManager)gameManager.CurrentState).FreeplayDeviceManager.FreeplayBombCount = value;
+                ((SetupStateManager)gameManager.CurrentState).FreeplayDeviceManager.FreeplayBombCount = value;
             }
         }
     }

@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class MultipleBombsSetupStateManager : MultipleBombsStateManager
+    public class SetupStateManager : StateManager
     {
         public FreeplayDeviceManager FreeplayDeviceManager { get; }
 
-        public MultipleBombsSetupStateManager(MultipleBombs multipleBombs, SetupState setupState)
+        public SetupStateManager(MultipleBombs multipleBombs, SetupState setupState)
         {
             Debug.Log("[MultipleBombs]Setting up setup state");
 

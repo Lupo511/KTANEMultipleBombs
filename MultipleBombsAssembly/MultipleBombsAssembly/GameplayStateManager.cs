@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class MultipleBombsGameplayStateManager : MultipleBombsStateManager
+    public class GameplayStateManager : StateManager
     {
         private static FieldInfo gameplayStateRoomGOField;
         private static FieldInfo gameplayStateLightBulbField;
@@ -21,13 +21,13 @@ namespace MultipleBombsAssembly
         private Dictionary<Bomb, BombComponentEvents.ComponentPassEvent> bombComponentPassEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent> bombComponentStrikeEvents;
 
-        static MultipleBombsGameplayStateManager()
+        static GameplayStateManager()
         {
             gameplayStateRoomGOField = typeof(GameplayState).GetField("roomGO", BindingFlags.Instance | BindingFlags.NonPublic);
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        public MultipleBombsGameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
+        public GameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
         {
             this.gameCommands = gameCommands;
             if (bombSolvedEvents == null)

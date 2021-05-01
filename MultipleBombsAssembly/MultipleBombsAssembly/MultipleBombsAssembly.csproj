@@ -78,11 +78,11 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="GameplayMusicControllerManager.cs" />
     <Compile Include="GeneratorSettingUtils.cs" />
-    <Compile Include="MultipleBombsStateManager.cs" />
+    <Compile Include="StateManager.cs" />
     <Compile Include="MultipleBombsFreeplaySettings.cs" />
-    <Compile Include="MultipleBombsGameplayStateManager.cs" />
+    <Compile Include="GameplayStateManager.cs" />
     <Compile Include="MultipleBombsModManager.cs" />
-    <Compile Include="MultipleBombsSetupStateManager.cs" />
+    <Compile Include="SetupStateManager.cs" />
     <Compile Include="TournamentDetailPageManager.cs" />
     <Compile Include="MultipleBombsMissionDetails.cs" />
     <Compile Include="MultipleBombsProperties.cs" />

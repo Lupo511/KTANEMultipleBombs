@@ -9,7 +9,7 @@ namespace MultipleBombsAssembly
     {
         private MultipleBombs multipleBombs;
         private KMGameCommands kmGameCommands;
-        public MultipleBombsStateManager CurrentState { get; set; }
+        public StateManager CurrentState { get; set; }
 
         public GameManager(MultipleBombs multipleBombs, KMGameInfo kmGameInfo, KMGameCommands kmGameCommands)
         {
@@ -29,10 +29,10 @@ namespace MultipleBombsAssembly
             switch (state)
             {
                 case KMGameInfo.State.Setup:
-                    CurrentState = new MultipleBombsSetupStateManager(multipleBombs, SceneManager.Instance.SetupState);
+                    CurrentState = new SetupStateManager(multipleBombs, SceneManager.Instance.SetupState);
                     break;
                 case KMGameInfo.State.Gameplay:
-                    CurrentState = new MultipleBombsGameplayStateManager(multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
+                    CurrentState = new GameplayStateManager(multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
                     break;
             }
         }

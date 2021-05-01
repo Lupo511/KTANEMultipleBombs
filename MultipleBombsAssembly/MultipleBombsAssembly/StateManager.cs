@@ -5,11 +5,11 @@ using System.Text;
 
 namespace MultipleBombsAssembly
 {
-    public class MultipleBombsStateManager
+    public class StateManager
     {
         private Queue<Action> lateUpdatePostedDelegates;
 
-        public MultipleBombsStateManager()
+        public StateManager()
         {
             lateUpdatePostedDelegates = new Queue<Action>();
         }
