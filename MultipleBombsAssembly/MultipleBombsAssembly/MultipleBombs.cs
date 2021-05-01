@@ -19,7 +19,7 @@ namespace MultipleBombsAssembly
 {
     public class MultipleBombs : MonoBehaviour
     {
-        private IMultipleBombsStateManager currentStateManager;
+        public GameManager gameManager;
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
         public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
         private FieldInfo gameplayStateRoomGOField;
@@ -35,12 +35,15 @@ namespace MultipleBombsAssembly
         {
             Debug.Log("[MultipleBombs]Initializing");
             DestroyImmediate(GetComponent<KMService>()); //Hide from Mod Selector
-            LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
             gameplayStateRoomGOField = typeof(GameplayState).GetField("roomGO", BindingFlags.Instance | BindingFlags.NonPublic);
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
             gameInfo = GetComponent<KMGameInfo>();
             gameCommands = GetComponent<KMGameCommands>();
             gameInfo.OnStateChange += onGameStateChanged;
+
+            gameManager = new GameManager(this, gameInfo);
+
+            LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
 
             GameObject infoObject = new GameObject("MultipleBombs_Info");
             infoObject.transform.parent = gameObject.transform;
@@ -56,8 +59,12 @@ namespace MultipleBombsAssembly
 
         public void Update()
         {
-            if (currentStateManager != null)
-                currentStateManager.Update();
+            gameManager.Update();
+        }
+
+        public void LateUpdate()
+        {
+            gameManager.LateUpdate();
         }
 
         public void OnDestroy()
@@ -73,7 +80,6 @@ namespace MultipleBombsAssembly
 
         private void onGameStateChanged(KMGameInfo.State state)
         {
-            currentStateManager = null;
             if (state == KMGameInfo.State.Gameplay)
             {
                 StartCoroutine(setupGameplayState());
@@ -88,10 +94,6 @@ namespace MultipleBombsAssembly
                 BombEvents.OnBombDetonated -= onBombDetonated;
                 BombComponentEvents.OnComponentPass -= onComponentPassEvent;
                 BombComponentEvents.OnComponentStrike -= onComponentStrikeEvent;
-                if (state == KMGameInfo.State.Setup)
-                {
-                    currentStateManager = new MultipleBombsSetupStateManager(this, SceneManager.Instance.SetupState);
-                }
             }
         }
 
@@ -565,7 +567,7 @@ namespace MultipleBombsAssembly
         {
             get
             {
-                if (currentStateManager is MultipleBombsSetupStateManager setupStateManager)
+                if (gameManager.CurrentState.StateManager is MultipleBombsSetupStateManager setupStateManager)
                     return setupStateManager.FreeplayDeviceManager.FreeplayBombCount;
                 else
                     return LastFreeplaySettings.BombCount;
@@ -578,7 +580,7 @@ namespace MultipleBombsAssembly
                     throw new Exception("The bomb count must be greater than 0.");
                 if (value > MultipleBombsModManager.GetMaximumBombs())
                     throw new Exception("The specified bomb count is greater than the current maximum bomb count.");
-                ((MultipleBombsSetupStateManager)currentStateManager).FreeplayDeviceManager.FreeplayBombCount = value;
+                ((MultipleBombsSetupStateManager)gameManager.CurrentState.StateManager).FreeplayDeviceManager.FreeplayBombCount = value;
             }
         }
     }
