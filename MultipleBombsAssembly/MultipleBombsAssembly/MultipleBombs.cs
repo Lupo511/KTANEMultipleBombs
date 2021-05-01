@@ -35,7 +35,7 @@ namespace MultipleBombsAssembly
             gameInfo = GetComponent<KMGameInfo>();
             gameCommands = GetComponent<KMGameCommands>();
 
-            gameManager = new GameManager(this, gameInfo);
+            gameManager = new GameManager(this, gameInfo, gameCommands);
 
             LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
 
@@ -80,7 +80,7 @@ namespace MultipleBombsAssembly
         {
             get
             {
-                if (gameManager.CurrentState.StateManager is MultipleBombsSetupStateManager setupStateManager)
+                if (gameManager.CurrentState is MultipleBombsSetupStateManager setupStateManager)
                     return setupStateManager.FreeplayDeviceManager.FreeplayBombCount;
                 else
                     return LastFreeplaySettings.BombCount;
@@ -93,7 +93,7 @@ namespace MultipleBombsAssembly
                     throw new Exception("The bomb count must be greater than 0.");
                 if (value > MultipleBombsModManager.GetMaximumBombs())
                     throw new Exception("The specified bomb count is greater than the current maximum bomb count.");
-                ((MultipleBombsSetupStateManager)gameManager.CurrentState.StateManager).FreeplayDeviceManager.FreeplayBombCount = value;
+                ((MultipleBombsSetupStateManager)gameManager.CurrentState).FreeplayDeviceManager.FreeplayBombCount = value;
             }
         }
     }

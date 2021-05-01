@@ -9,7 +9,7 @@ namespace MultipleBombsAssembly
     {
         private MultipleBombs multipleBombs;
         private KMGameCommands kmGameCommands;
-        public GameManagerState CurrentState { get; set; }
+        public MultipleBombsStateManager CurrentState { get; set; }
 
         public GameManager(MultipleBombs multipleBombs, KMGameInfo kmGameInfo, KMGameCommands kmGameCommands)
         {
@@ -26,9 +26,15 @@ namespace MultipleBombsAssembly
                 CurrentState = null;
             }
 
-            //To-do: finish properly
-            if (state == KMGameInfo.State.Setup || state == KMGameInfo.State.Gameplay)
-                CurrentState = new GameManagerState(state, multipleBombs, kmGameCommands);
+            switch (state)
+            {
+                case KMGameInfo.State.Setup:
+                    CurrentState = new MultipleBombsSetupStateManager(multipleBombs, SceneManager.Instance.SetupState);
+                    break;
+                case KMGameInfo.State.Gameplay:
+                    CurrentState = new MultipleBombsGameplayStateManager(multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
+                    break;
+            }
         }
 
         public void Update()
@@ -40,7 +46,10 @@ namespace MultipleBombsAssembly
         public void LateUpdate()
         {
             if (CurrentState != null)
+            {
                 CurrentState.LateUpdate();
+                CurrentState.RunLateUpdateDelegates();
+            }
         }
     }
 }

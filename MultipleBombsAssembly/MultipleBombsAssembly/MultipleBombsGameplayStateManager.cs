@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class MultipleBombsGameplayStateManager : IMultipleBombsStateManager
+    public class MultipleBombsGameplayStateManager : MultipleBombsStateManager
     {
         private static FieldInfo gameplayStateRoomGOField;
         private static FieldInfo gameplayStateLightBulbField;
@@ -27,7 +27,7 @@ namespace MultipleBombsAssembly
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        public MultipleBombsGameplayStateManager(GameManagerState state, MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
+        public MultipleBombsGameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
         {
             this.gameCommands = gameCommands;
             if (bombSolvedEvents == null)
@@ -113,12 +113,7 @@ namespace MultipleBombsAssembly
             Debug.Log("[MultipleBombs]Result screens initialized");
 
             //Let the game generate the bomb and then continue setup
-            state.PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
-        }
-
-        public void Update()
-        {
-
+            PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
         }
 
         private void setupBombs(GameplayState gameplayState, Mission mission, List<ComponentPool> multipleBombsComponentPools)

@@ -76,10 +76,9 @@
     <Compile Include="ConfigManager.cs" />
     <Compile Include="FreeplayDeviceManager.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="GameManagerState.cs" />
     <Compile Include="GameplayMusicControllerManager.cs" />
     <Compile Include="GeneratorSettingUtils.cs" />
-    <Compile Include="IMultipleBombsStateManager.cs" />
+    <Compile Include="MultipleBombsStateManager.cs" />
     <Compile Include="MultipleBombsFreeplaySettings.cs" />
     <Compile Include="MultipleBombsGameplayStateManager.cs" />
     <Compile Include="MultipleBombsModManager.cs" />

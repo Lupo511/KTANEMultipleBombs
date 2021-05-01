@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class MultipleBombsSetupStateManager : IMultipleBombsStateManager
+    public class MultipleBombsSetupStateManager : MultipleBombsStateManager
     {
         public FreeplayDeviceManager FreeplayDeviceManager { get; }
 
@@ -31,11 +31,6 @@ namespace MultipleBombsAssembly
             }
 
             Debug.Log("[MultipleBombs]Setup state set up");
-        }
-
-        public void Update()
-        {
-
         }
     }
 }
