@@ -15,6 +15,19 @@ namespace MultipleBombsAssembly
             StateManager = stateManager;
         }
 
+        public GameManagerState(KMGameInfo.State state, MultipleBombs multipleBombs, KMGameCommands gameCommands)
+        {
+            switch (state)
+            {
+                case KMGameInfo.State.Setup:
+                    StateManager = new MultipleBombsSetupStateManager(multipleBombs, SceneManager.Instance.SetupState);
+                    break;
+                case KMGameInfo.State.Gameplay:
+                    StateManager = new MultipleBombsGameplayStateManager(this, multipleBombs, SceneManager.Instance.GameplayState, gameCommands);
+                    break;
+            }
+        }
+
         public void Update()
         {
             StateManager.Update();
