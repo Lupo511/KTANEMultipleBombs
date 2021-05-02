@@ -317,7 +317,10 @@ namespace MultipleBombsAssembly
                 if (bombSolvedDelegate.Target != null && (ReferenceEquals(bombSolvedDelegate.Target, bomb.GetTimer()) || ReferenceEquals(bombSolvedDelegate.Target, bomb.StrikeIndicator)))
                 {
                     BombEvents.OnBombSolved -= bombSolvedDelegate;
-                    bombSolvedEvents[bomb] += bombSolvedDelegate;
+                    if (bombSolvedEvents.ContainsKey(bomb))
+                        bombSolvedEvents[bomb] += bombSolvedDelegate;
+                    else
+                        bombSolvedEvents.Add(bomb, bombSolvedDelegate);
                     bombSolvedDelegates.RemoveAt(i);
                 }
             }
