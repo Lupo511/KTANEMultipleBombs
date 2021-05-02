@@ -63,7 +63,7 @@ namespace MultipleBombsAssembly
                 List<GameplayRoom> rooms = new List<GameplayRoom>();
                 if (currentMission.BombCount <= 2) //To-do: match game behaviour and only pick default room if no valid mod rooms are available?
                     rooms.Add(gameplayState.GameplayRoomPool.Default.GetComponent<GameplayRoom>());
-                foreach (GameObject gameplayRoomObject in SceneManager.Instance.GameplayState.GameplayRoomPool.Objects)
+                foreach (GameObject gameplayRoomObject in gameplayState.GameplayRoomPool.Objects)
                 {
                     GameplayRoom gameplayRoom = gameplayRoomObject.GetComponent<GameplayRoom>();
                     if (currentMission.BombCount <= MultipleBombsModManager.GetRoomSupportedBombCount(gameplayRoom))
