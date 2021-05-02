@@ -114,6 +114,9 @@ namespace MultipleBombsAssembly
 
             //Let the game generate the bomb and then continue setup
             PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
+
+            //Start the start round coroutine
+            StartCoroutine(StartRound(gameplayState));
         }
 
         private void setupBombs(GameplayState gameplayState, Mission mission, List<ComponentPool> multipleBombsComponentPools)
@@ -232,6 +235,21 @@ namespace MultipleBombsAssembly
                         bomb.GetTimer().TimerTick = (TimerComponent.TimerTickEvent)Delegate.Combine(bomb.GetTimer().TimerTick, new TimerComponent.TimerTickEvent((elapsed, remaining) => monitor.OnBombTimerTick(bomb, elapsed, remaining)));
                 }
                 Debug.Log("[MultipleBombs]Pacing events initalized");
+            }
+        }
+
+        private IEnumerator<ICoroutineYieldable> StartRound(GameplayState gameplayState)
+        {
+            yield return new CoroutineTimeDelay(2);
+            foreach (Bomb bomb in gameplayState.Bombs)
+            {
+                if (bomb != gameplayState.Bomb)
+                {
+                    Debug.Log("[MultipleBombs]Activating custom bomb timer");
+                    bomb.GetTimer().text.gameObject.SetActive(true);
+                    bomb.GetTimer().LightGlow.enabled = true;
+                    Debug.Log("[MultipleBombs]Custom bomb timer activated");
+                }
             }
         }
 
