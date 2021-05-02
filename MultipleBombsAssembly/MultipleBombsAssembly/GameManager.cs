@@ -51,5 +51,11 @@ namespace MultipleBombsAssembly
                 CurrentState.RunLateUpdateDelegates();
             }
         }
+
+        public void CoroutineUpdate()
+        {
+            if (CurrentState != null)
+                CurrentState.RunCoroutines();
+        }
     }
 }

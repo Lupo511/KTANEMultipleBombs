@@ -48,6 +48,8 @@ namespace MultipleBombsAssembly
 
             GameplayMusicControllerManager = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerManager>();
 
+            StartCoroutine(UpdateCoroutine());
+
             Debug.Log("[MultipleBombs]Initialized");
         }
 
@@ -59,6 +61,16 @@ namespace MultipleBombsAssembly
         public void LateUpdate()
         {
             gameManager.LateUpdate();
+        }
+
+        public IEnumerator UpdateCoroutine()
+        {
+            yield return null;
+            while (true)
+            {
+                gameManager.CoroutineUpdate();
+                yield return null;
+            }
         }
 
         public void OnDestroy()
