@@ -30,7 +30,7 @@ namespace MultipleBombsAssembly
 
         public void RunCoroutines()
         {
-            for (int i = coroutines.Count; i >= 0; i--)
+            for (int i = coroutines.Count - 1; i >= 0; i--)
             {
                 IEnumerator<ICoroutineYieldable> coroutine = coroutines[i];
                 if (coroutine.Current == null || coroutine.Current.IsFinished)
