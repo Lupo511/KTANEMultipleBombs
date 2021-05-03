@@ -161,7 +161,6 @@ namespace MultipleBombsAssembly
                 moduleCountDecrementSelectable.OnHighlight -= moduleCountDecrementAction;
                 moduleCountDecrementSelectable.OnHighlight += setCustomModulesText;
             }
-            moduleCountDecrementSelectable.OnHighlight += disableBomsLed;
             Selectable moduleCountIncrementSelectable = freeplayDevice.ModuleCountIncrement.GetComponent<Selectable>();
             Action moduleCountIncrementAction = (Action)findFreeplayDeviceEventTarget(moduleCountIncrementSelectable.OnHighlight, freeplayDevice);
             if (moduleCountIncrementAction != null)
