@@ -154,31 +154,19 @@ namespace MultipleBombsAssembly
                 freeplayDevice.Screen.CurrentState = FreeplayScreen.State.Modules;
                 freeplayDevice.Screen.ScreenText.text = "MODULES:\n\nNumber of modules\nper bomb";
             });
-            Selectable moduleCountDecrementSelectable = freeplayDevice.ModuleCountDecrement.GetComponent<Selectable>();
-            Action moduleCountDecrementAction = (Action)findFreeplayDeviceEventTarget(moduleCountDecrementSelectable.OnHighlight, freeplayDevice);
-            if (moduleCountDecrementAction != null)
-            {
-                moduleCountDecrementSelectable.OnHighlight -= moduleCountDecrementAction;
-                moduleCountDecrementSelectable.OnHighlight += setCustomModulesText;
-            }
-            Selectable moduleCountIncrementSelectable = freeplayDevice.ModuleCountIncrement.GetComponent<Selectable>();
-            Action moduleCountIncrementAction = (Action)findFreeplayDeviceEventTarget(moduleCountIncrementSelectable.OnHighlight, freeplayDevice);
-            if (moduleCountIncrementAction != null)
-            {
-                moduleCountIncrementSelectable.OnHighlight -= moduleCountIncrementAction;
-                moduleCountIncrementSelectable.OnHighlight += setCustomModulesText;
-            }
+            DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountDecrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);
+            DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountIncrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);
 
             //We need to wait the next frame to patch event handlers after they've been assigned
             yield return null;
 
             //Patch button push event handlers to calculate custom difficulty
-            patchFreeplayButtonPushDifficulty(freeplayDevice.ModuleCountDecrement, freeplayDevice);
-            patchFreeplayButtonPushDifficulty(freeplayDevice.ModuleCountIncrement, freeplayDevice);
-            patchFreeplayButtonPushDifficulty(freeplayDevice.TimeDecrement, freeplayDevice);
-            patchFreeplayButtonPushDifficulty(freeplayDevice.TimeIncrement, freeplayDevice);
-            patchFreeplayToggleDifficulty(freeplayDevice.NeedyToggle, freeplayDevice);
-            patchFreeplayToggleDifficulty(freeplayDevice.HardcoreToggle, freeplayDevice);
+            freeplayDevice.ModuleCountDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+            freeplayDevice.ModuleCountIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+            freeplayDevice.TimeDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+            freeplayDevice.TimeIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+            freeplayDevice.NeedyToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+            freeplayDevice.HardcoreToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
 
             Debug.Log("[MultipleBombs]FreePlay option added");
         }
@@ -227,42 +215,6 @@ namespace MultipleBombsAssembly
                 device.DifficultyIndicator.Configure(device.CurrentSettings.Time, device.CurrentSettings.ModuleCount, device.CurrentSettings.HasNeedy, false);
                 device.DifficultyIndicator.Difficulty *= freeplaySettings.BombCount;
             }
-        }
-
-        private void patchFreeplayButtonPushDifficulty(KeypadButton button, FreeplayDevice device)
-        {
-            PushEvent original = (PushEvent)findFreeplayDeviceEventTarget(button.OnPush, device);
-            button.OnPush -= original;
-            button.OnPush += new PushEvent(() =>
-            {
-                if (original != null)
-                    original();
-                updateFreeplayDeviceDifficulty(device);
-            });
-        }
-
-        private void patchFreeplayToggleDifficulty(ToggleSwitch toggle, FreeplayDevice device)
-        {
-            ToggleEvent original = (ToggleEvent)findFreeplayDeviceEventTarget(toggle.OnToggle, device);
-            toggle.OnToggle -= original;
-            toggle.OnToggle += new ToggleEvent((bool toggleState) =>
-            {
-                if (original != null)
-                    original(toggleState);
-                updateFreeplayDeviceDifficulty(device);
-            });
-        }
-
-        private Delegate findFreeplayDeviceEventTarget(Delegate source, FreeplayDevice device)
-        {
-            foreach (Delegate del in source.GetInvocationList())
-            {
-                if (ReferenceEquals(del.Target, device))
-                {
-                    return del;
-                }
-            }
-            return null;
         }
 
         public int FreeplayBombCount
