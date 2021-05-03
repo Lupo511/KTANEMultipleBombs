@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Missions;
+using Events;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,77 +8,62 @@ using System.Text;
 
 namespace MultipleBombsAssembly
 {
-    public static class BombInfoRedirection
+    public class BombInfoProvider
     {
-        private static int bombCount = 1;
+        private int bombCount = 1;
+        private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
 
-        internal static void RedirectBombInfo(KMBombInfo bombInfo, Bomb bomb)
+        public BombInfoProvider(int bombCount)
+        {
+            this.bombCount = bombCount;
+            bombSolvedEvents = new Dictionary<Bomb, BombEvents.BombSolvedEvent>();
+        }
+
+        public void RedirectBombInfo(KMBombInfo bombInfo, Bomb bomb)
         {
             ModBombInfo modBombInfo = bombInfo.GetComponent<ModBombInfo>();
-            bombInfo.TimeHandler = (KMBombInfo.GetTimeHandler)patchDelegate(bombInfo.TimeHandler, (KMBombInfo.GetTimeHandler)modBombInfo.GetTime, new KMBombInfo.GetTimeHandler(() => GetTime(bomb)));
-            bombInfo.FormattedTimeHandler = (KMBombInfo.GetFormattedTimeHandler)patchDelegate(bombInfo.FormattedTimeHandler, (KMBombInfo.GetFormattedTimeHandler)modBombInfo.GetFormattedTime, new KMBombInfo.GetFormattedTimeHandler(() => GetFormattedTime(bomb)));
-            bombInfo.StrikesHandler = (KMBombInfo.GetStrikesHandler)patchDelegate(bombInfo.StrikesHandler, (KMBombInfo.GetStrikesHandler)modBombInfo.GetStrikes, new KMBombInfo.GetStrikesHandler(() => GetStrikes(bomb)));
-            bombInfo.ModuleNamesHandler = (KMBombInfo.GetModuleNamesHandler)patchDelegate(bombInfo.ModuleNamesHandler, (KMBombInfo.GetModuleNamesHandler)modBombInfo.GetModuleNames, new KMBombInfo.GetModuleNamesHandler(() => GetModuleNames(bomb)));
-            bombInfo.SolvableModuleNamesHandler = (KMBombInfo.GetSolvableModuleNamesHandler)patchDelegate(bombInfo.SolvableModuleNamesHandler, (KMBombInfo.GetSolvableModuleNamesHandler)modBombInfo.GetSolvableModuleNames, new KMBombInfo.GetSolvableModuleNamesHandler(() => GetSolvableModuleNames(bomb)));
-            bombInfo.SolvedModuleNamesHandler = (KMBombInfo.GetSolvedModuleNamesHandler)patchDelegate(bombInfo.SolvedModuleNamesHandler, (KMBombInfo.GetSolvedModuleNamesHandler)modBombInfo.GetSolvedModuleNames, new KMBombInfo.GetSolvedModuleNamesHandler(() => GetSolvedModuleNames(bomb)));
-            bombInfo.ModuleIDsHandler = (KMBombInfo.GetModuleIDsHandler)patchDelegate(bombInfo.ModuleIDsHandler, (KMBombInfo.GetModuleIDsHandler)modBombInfo.GetModuleTypes, new KMBombInfo.GetModuleIDsHandler(() => GetModuleTypes(bomb)));
-            bombInfo.SolvableModuleIDsHandler = (KMBombInfo.GetSolvableModuleIDsHandler)patchDelegate(bombInfo.SolvableModuleIDsHandler, (KMBombInfo.GetSolvableModuleIDsHandler)modBombInfo.GetSolvableModuleTypes, new KMBombInfo.GetSolvableModuleIDsHandler(() => GetSolvableModuleTypes(bomb)));
-            bombInfo.SolvedModuleIDsHandler = (KMBombInfo.GetSolvedModuleIDsHandler)patchDelegate(bombInfo.SolvedModuleIDsHandler, (KMBombInfo.GetSolvedModuleIDsHandler)modBombInfo.GetSolvedModuleTypes, new KMBombInfo.GetSolvedModuleIDsHandler(() => GetSolvedModuleTypes(bomb)));
-            bombInfo.WidgetQueryResponsesHandler = (KMBombInfo.GetWidgetQueryResponsesHandler)patchDelegate(bombInfo.WidgetQueryResponsesHandler, (KMBombInfo.GetWidgetQueryResponsesHandler)modBombInfo.GetWidgetQueryResponses, new KMBombInfo.GetWidgetQueryResponsesHandler((string queryKey, string queryInfo) => GetWidgetQueryResponses(bomb, queryKey, queryInfo)));
-            bombInfo.IsBombPresentHandler = (KMBombInfo.KMIsBombPresent)patchDelegateHard(bombInfo.IsBombPresentHandler, modBombInfo, new KMBombInfo.KMIsBombPresent(() => IsBombPresent(bomb)));
+
+            DelegateUtils.RemoveAdd(ref bombInfo.TimeHandler, modBombInfo.GetTime, () => GetTime(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.FormattedTimeHandler, modBombInfo.GetFormattedTime, () => GetFormattedTime(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.StrikesHandler, modBombInfo.GetStrikes, () => GetStrikes(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.ModuleNamesHandler, modBombInfo.GetModuleNames, () => GetModuleNames(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.SolvableModuleNamesHandler, modBombInfo.GetSolvableModuleNames, () => GetSolvableModuleNames(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.SolvedModuleNamesHandler, modBombInfo.GetSolvedModuleNames, () => GetSolvedModuleNames(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.ModuleIDsHandler, modBombInfo.GetModuleTypes, () => GetModuleTypes(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.SolvableModuleIDsHandler, modBombInfo.GetSolvableModuleTypes, () => GetSolvableModuleTypes(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.SolvedModuleIDsHandler, modBombInfo.GetSolvedModuleTypes, () => GetSolvedModuleTypes(bomb));
+            DelegateUtils.RemoveAdd(ref bombInfo.WidgetQueryResponsesHandler, modBombInfo.GetWidgetQueryResponses, (string queryKey, string queryInfo) => GetWidgetQueryResponses(bomb, queryKey, queryInfo));
+            DelegateUtils.ReplaceFromTarget(ref bombInfo.IsBombPresentHandler, modBombInfo, () => IsBombPresent(bomb));
+
+            BombEvents.BombSolvedEvent modBombInfoSolvedEvent = DelegateUtils.RemoveFromTarget(ref BombEvents.OnBombSolved, modBombInfo);
+            if (bombSolvedEvents.ContainsKey(bomb))
+                bombSolvedEvents[bomb] += modBombInfoSolvedEvent;
+            else
+                bombSolvedEvents.Add(bomb, modBombInfoSolvedEvent);
         }
 
-        private static Delegate patchDelegate(Delegate source, Delegate remove, Delegate add)
-        {
-            source = Delegate.Remove(source, remove);
-            source = Delegate.Combine(source, add);
-            return source;
-        }
-
-        private static Delegate patchDelegateHard(Delegate source, object removeTarget, Delegate add)
-        {
-            if (source != null)
-            {
-                foreach (Delegate target in source.GetInvocationList())
-                {
-                    if (target.Target != null && ReferenceEquals(target.Target, removeTarget))
-                    {
-                        source = Delegate.Remove(source, target);
-                        break;
-                    }
-                }
-            }
-            source = Delegate.Combine(source, add);
-            return source;
-        }
-
-        internal static void SetBombCount(int count)
-        {
-            bombCount = count;
-        }
-
-        internal static float GetTime(Bomb bomb)
+        internal float GetTime(Bomb bomb)
         {
             if (bomb == null)
                 return 0f;
             return bomb.GetTimer().TimeRemaining;
         }
 
-        internal static string GetFormattedTime(Bomb bomb)
+        internal string GetFormattedTime(Bomb bomb)
         {
             if (bomb == null)
                 return "";
             return bomb.GetTimer().GetFormattedTime(bomb.GetTimer().TimeRemaining, true);
         }
 
-        internal static int GetStrikes(Bomb bomb)
+        internal int GetStrikes(Bomb bomb)
         {
             if (bomb == null)
                 return 0;
             return bomb.NumStrikes;
         }
 
-        internal static List<string> GetModuleNames(Bomb bomb)
+        internal List<string> GetModuleNames(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -92,7 +78,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetSolvableModuleNames(Bomb bomb)
+        internal List<string> GetSolvableModuleNames(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -107,7 +93,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetSolvedModuleNames(Bomb bomb)
+        internal List<string> GetSolvedModuleNames(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -122,7 +108,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetModuleTypes(Bomb bomb)
+        internal List<string> GetModuleTypes(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -137,7 +123,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetSolvableModuleTypes(Bomb bomb)
+        internal List<string> GetSolvableModuleTypes(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -152,7 +138,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetSolvedModuleTypes(Bomb bomb)
+        internal List<string> GetSolvedModuleTypes(Bomb bomb)
         {
             List<string> modules = new List<string>();
             if (bomb == null)
@@ -167,7 +153,7 @@ namespace MultipleBombsAssembly
             return modules;
         }
 
-        internal static List<string> GetWidgetQueryResponses(Bomb bomb, string queryKey, string queryInfo)
+        internal List<string> GetWidgetQueryResponses(Bomb bomb, string queryKey, string queryInfo)
         {
             List<string> responses = new List<string>();
             if (bomb == null)
@@ -187,12 +173,12 @@ namespace MultipleBombsAssembly
             return responses;
         }
 
-        internal static bool IsBombPresent(Bomb bomb)
+        internal bool IsBombPresent(Bomb bomb)
         {
             return bomb != null;
         }
 
-        private static string GetBombComponentModuleType(BombComponent component)
+        private string GetBombComponentModuleType(BombComponent component)
         {
             if (component.ComponentType == ComponentTypeEnum.Mod)
             {
@@ -215,6 +201,12 @@ namespace MultipleBombsAssembly
                 return component.ComponentType.ToString();
             }
             return "Unknown";
+        }
+
+        public void BombSolved(Bomb bomb)
+        {
+            if (bombSolvedEvents.ContainsKey(bomb))
+                bombSolvedEvents[bomb]();
         }
     }
 }

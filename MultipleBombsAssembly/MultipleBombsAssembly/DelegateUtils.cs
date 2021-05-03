@@ -7,6 +7,12 @@ namespace MultipleBombsAssembly
 {
     public static class DelegateUtils
     {
+        public static void RemoveAdd<T>(ref T del, T removeDelegate, T addDelegate) where T : Delegate
+        {
+            del = (T)Delegate.Remove(del, removeDelegate);
+            del = (T)Delegate.Combine(del, addDelegate);
+        }
+
         public static T GetFromTarget<T>(ref T del, object target) where T : Delegate
         {
             if (del == null)

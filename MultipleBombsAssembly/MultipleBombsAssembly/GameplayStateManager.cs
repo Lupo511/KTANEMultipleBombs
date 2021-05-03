@@ -17,6 +17,7 @@ namespace MultipleBombsAssembly
         private static FieldInfo gameplayStateLightBulbField;
         private KMGameCommands gameCommands;
         private MultipleBombsMissionDetails currentMission;
+        private BombInfoProvider bombInfoProvider;
         private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentPassEvent> bombComponentPassEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent> bombComponentStrikeEvents;
@@ -27,7 +28,6 @@ namespace MultipleBombsAssembly
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        //To-do: it's currently missing to set the BombInfoRedirection bomb count
         public GameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
         {
             this.gameCommands = gameCommands;
@@ -56,6 +56,8 @@ namespace MultipleBombsAssembly
                 mission = MissionManager.Instance.GetMission(GameplayState.MissionToLoad);
                 currentMission = MultipleBombsMissionDetails.ReadMission(mission, true, out multipleBombsComponentPools);
             }
+
+            bombInfoProvider = new BombInfoProvider(currentMission.BombCount);
 
             //Select a valid room for the required bomb count
             if (currentMission.BombCount > 1 && GameplayState.GameplayRoomPrefabOverride == null)
@@ -154,7 +156,7 @@ namespace MultipleBombsAssembly
                 }
                 vanillaBomb.GetComponent<FloatingHoldable>().Initialize();
 
-                redirectPresentBombInfos(vanillaBomb, redirectedBombInfos);
+                redirectNewBombInfos(vanillaBomb, redirectedBombInfos);
 
                 processBombEvents(vanillaBomb);
                 Debug.Log("[MultipleBombs]Vanilla bomb initialized");
@@ -265,7 +267,7 @@ namespace MultipleBombsAssembly
             Bomb bomb = gameCommands.CreateBomb(null, generatorSetting, spawnPointGO, seed.ToString()).GetComponent<Bomb>();
             Debug.Log("[MultipleBombs]Bomb spawned");
 
-            redirectPresentBombInfos(bomb, knownBombInfos);
+            redirectNewBombInfos(bomb, knownBombInfos);
             Debug.Log("[MultipleBombs]KMBombInfos redirected");
 
             processBombEvents(bomb);
@@ -278,7 +280,7 @@ namespace MultipleBombsAssembly
             return CreateBomb(GeneratorSettingUtils.CreateModFromGeneratorSetting(generatorSetting), position, eulerAngles, seed, knownBombInfos);
         }
 
-        private void redirectPresentBombInfos(Bomb bomb, List<KMBombInfo> knownBombInfos)
+        private void redirectNewBombInfos(Bomb bomb, List<KMBombInfo> knownBombInfos)
         {
             if (knownBombInfos == null)
                 knownBombInfos = new List<KMBombInfo>();
@@ -287,22 +289,7 @@ namespace MultipleBombsAssembly
             {
                 if (!knownBombInfos.Contains(info))
                 {
-                    //To-do: just implement entirely here
-                    BombInfoRedirection.RedirectBombInfo(info, bomb);
-                    ModBombInfo modInfo = info.GetComponent<ModBombInfo>();
-                    foreach (BombEvents.BombSolvedEvent bombSolvedDelegate in BombEvents.OnBombSolved.GetInvocationList())
-                    {
-                        if (bombSolvedDelegate.Target != null && ReferenceEquals(bombSolvedDelegate.Target, modInfo))
-                        {
-                            if (bombSolvedEvents.ContainsKey(bomb))
-                                bombSolvedEvents[bomb] += bombSolvedDelegate;
-                            else
-                                bombSolvedEvents.Add(bomb, bombSolvedDelegate);
-                            BombEvents.OnBombSolved -= bombSolvedDelegate;
-                            break;
-                        }
-                    }
-                    knownBombInfos.Add(info);
+                    bombInfoProvider.RedirectBombInfo(info, bomb);
                 }
             }
         }
@@ -359,6 +346,7 @@ namespace MultipleBombsAssembly
                     BombEvents.OnBombSolved();
                 if (bombSolvedEvents.ContainsKey(source.Bomb) && bombSolvedEvents[source.Bomb] != null)
                     bombSolvedEvents[source.Bomb].Invoke();
+                bombInfoProvider.BombSolved(source.Bomb);
 
                 SceneManager.Instance.GameplayState.OnBombSolved();
 

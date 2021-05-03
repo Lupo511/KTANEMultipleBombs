@@ -72,7 +72,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="BombInfoRedirection.cs" />
+    <Compile Include="BombInfoProvider.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="DelegateUtils.cs" />
     <Compile Include="StateCoroutine.cs" />
