@@ -4,33 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Timers;
+using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    //This does not have the exact behaviour of Unity WaitForSeconds but it should be good enough for our needs
     public class CoroutineTimeDelay : ICoroutineYieldable
     {
-        private int isElapsed;
+        private float secondsDelay;
+        private float? timeElapsed;
 
         public bool IsFinished
         {
             get
             {
-                return Interlocked.CompareExchange(ref isElapsed, 1, 1) == 1;
+                return timeElapsed >= secondsDelay;
             }
         }
 
         public CoroutineTimeDelay(float secondsDelay)
         {
-            System.Timers.Timer timer = new System.Timers.Timer(secondsDelay * 1000);
-            timer.Elapsed += timer_Elapsed;
-            timer.AutoReset = false;
-            timer.Start();
+            this.secondsDelay = secondsDelay;
         }
 
-        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        public void Update()
         {
-            Interlocked.Exchange(ref isElapsed, 1);
+            if (timeElapsed == null)
+                timeElapsed = 0;
+            else
+                timeElapsed += Time.deltaTime;
         }
     }
 }

@@ -8,5 +8,7 @@ namespace MultipleBombsAssembly
     public interface ICoroutineYieldable
     {
         bool IsFinished { get; }
+
+        void Update();
     }
 }

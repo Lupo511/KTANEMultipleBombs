@@ -27,6 +27,7 @@ namespace MultipleBombsAssembly
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
+        //To-do: it's currently missing to set the BombInfoRedirection bomb count
         public GameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
         {
             this.gameCommands = gameCommands;

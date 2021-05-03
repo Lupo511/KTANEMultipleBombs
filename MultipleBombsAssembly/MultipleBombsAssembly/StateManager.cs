@@ -8,12 +8,12 @@ namespace MultipleBombsAssembly
     public class StateManager
     {
         private Queue<Action> lateUpdatePostedDelegates;
-        private List<IEnumerator<ICoroutineYieldable>> coroutines;
+        private List<StateCoroutine> coroutines;
 
         public StateManager()
         {
             lateUpdatePostedDelegates = new Queue<Action>();
-            coroutines = new List<IEnumerator<ICoroutineYieldable>>();
+            coroutines = new List<StateCoroutine>();
         }
 
         public virtual void Update() { }
@@ -32,12 +32,9 @@ namespace MultipleBombsAssembly
         {
             for (int i = coroutines.Count - 1; i >= 0; i--)
             {
-                IEnumerator<ICoroutineYieldable> coroutine = coroutines[i];
-                if (coroutine.Current == null || coroutine.Current.IsFinished)
-                {
-                    if (!coroutine.MoveNext())
-                        coroutines.RemoveAt(i);
-                }
+                StateCoroutine coroutine = coroutines[i];
+                if (coroutine.CoroutineUpdate())
+                    coroutines.RemoveAt(i);
             }
         }
 
@@ -46,10 +43,9 @@ namespace MultipleBombsAssembly
             lateUpdatePostedDelegates.Enqueue(action);
         }
 
-        public void StartCoroutine(IEnumerator<ICoroutineYieldable> coroutine)
+        public void StartCoroutine(IEnumerator<ICoroutineYieldable> enumerator)
         {
-            if (coroutine.MoveNext())
-                coroutines.Add(coroutine);
+            coroutines.Add(new StateCoroutine(enumerator));
         }
     }
 }
