@@ -156,7 +156,7 @@ namespace MultipleBombsAssembly
                 }
                 vanillaBomb.GetComponent<FloatingHoldable>().Initialize();
 
-                redirectNewBombInfos(vanillaBomb, redirectedBombInfos);
+                redirectedBombInfos.AddRange(redirectNewBombInfos(vanillaBomb, redirectedBombInfos));
 
                 processBombEvents(vanillaBomb);
                 Debug.Log("[MultipleBombs]Vanilla bomb initialized");
@@ -267,7 +267,8 @@ namespace MultipleBombsAssembly
             Bomb bomb = gameCommands.CreateBomb(null, generatorSetting, spawnPointGO, seed.ToString()).GetComponent<Bomb>();
             Debug.Log("[MultipleBombs]Bomb spawned");
 
-            redirectNewBombInfos(bomb, knownBombInfos);
+            List<KMBombInfo> newBombInfos = redirectNewBombInfos(bomb, knownBombInfos);
+            knownBombInfos?.AddRange(newBombInfos);
             Debug.Log("[MultipleBombs]KMBombInfos redirected");
 
             processBombEvents(bomb);
@@ -280,18 +281,23 @@ namespace MultipleBombsAssembly
             return CreateBomb(GeneratorSettingUtils.CreateModFromGeneratorSetting(generatorSetting), position, eulerAngles, seed, knownBombInfos);
         }
 
-        private void redirectNewBombInfos(Bomb bomb, List<KMBombInfo> knownBombInfos)
+        private List<KMBombInfo> redirectNewBombInfos(Bomb bomb, List<KMBombInfo> knownBombInfos)
         {
             if (knownBombInfos == null)
                 knownBombInfos = new List<KMBombInfo>();
+
+            List<KMBombInfo> newBombInfos = new List<KMBombInfo>();
 
             foreach (KMBombInfo info in UnityEngine.Object.FindObjectsOfType<KMBombInfo>())
             {
                 if (!knownBombInfos.Contains(info))
                 {
                     bombInfoProvider.RedirectBombInfo(info, bomb);
+                    newBombInfos.Add(info);
                 }
             }
+
+            return newBombInfos;
         }
 
         private void processBombEvents(Bomb bomb)
