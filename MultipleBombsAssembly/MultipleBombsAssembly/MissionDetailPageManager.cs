@@ -56,6 +56,10 @@ namespace MultipleBombsAssembly
 
         private void setupPage()
         {
+            //Don't run if the object has been disabled
+            if (!enabled)
+                return;
+
             //Read the mission and update the page data
             Mission currentMission = (Mission)currentMissionField.GetValue(page);
             bool canStart = UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, MultipleBombsModManager.GetMaximumBombs(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
