@@ -35,7 +35,7 @@ namespace MultipleBombsAssembly
                 vanillaMaxSecondsToSolve = FreeplayDevice.MAX_SECONDS_TO_SOLVE;
             maxModBombModules = ModManager.Instance.GetMaximumModules();
 
-            Debug.Log("[MultipleBombs]Adding FreePlay option");
+            Debug.Log("[MultipleBombs]Adding Freeplay option");
 
             FreeplayDevice freeplayDevice = GetComponent<FreeplayDevice>();
 
@@ -174,7 +174,7 @@ namespace MultipleBombsAssembly
                 Debug.Log("[MultipleBombs]Freeplay events patched")
             });
 
-            Debug.Log("[MultipleBombs]FreePlay option added");
+            Debug.Log("[MultipleBombs]Freeplay option added");
         }
 
         public void Update()

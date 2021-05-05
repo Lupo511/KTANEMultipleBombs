@@ -44,7 +44,7 @@ namespace MultipleBombsAssembly
             if (GameplayState.MissionToLoad == FreeplayMissionGenerator.FREEPLAY_MISSION_ID)
             {
                 mission = FreeplayMissionGenerator.Generate(GameplayState.FreeplaySettings);
-                currentMission = new MultipleBombsMissionDetails(multipleBombs.CurrentFreePlayBombCount, mission.GeneratorSetting);
+                currentMission = new MultipleBombsMissionDetails(multipleBombs.CurrentFreeplayBombCount, mission.GeneratorSetting);
             }
             else if (GameplayState.MissionToLoad == ModMission.CUSTOM_MISSION_ID)
             {

@@ -12,7 +12,7 @@ namespace MultipleBombsAssembly
         public MultipleBombsProperties()
         {
             AddProperty("CurrentMaximumBombCount", () => MultipleBombsModManager.GetMaximumBombs(), null);
-            AddProperty("CurrentFreePlayBombCount", () => { return MultipleBombs.CurrentFreePlayBombCount; }, (object value) => { MultipleBombs.CurrentFreePlayBombCount = (int)value; });
+            AddProperty("CurrentFreePlayBombCount", () => { return MultipleBombs.CurrentFreeplayBombCount; }, (object value) => { MultipleBombs.CurrentFreeplayBombCount = (int)value; });
         }
     }
 }

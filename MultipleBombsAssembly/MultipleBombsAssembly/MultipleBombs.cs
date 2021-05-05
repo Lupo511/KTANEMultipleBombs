@@ -88,7 +88,7 @@ namespace MultipleBombsAssembly
 
         //To-do: readd create bomb method used by factory
 
-        public int CurrentFreePlayBombCount
+        public int CurrentFreeplayBombCount
         {
             get
             {
@@ -100,7 +100,7 @@ namespace MultipleBombsAssembly
             set
             {
                 if (SceneManager.Instance.CurrentState != SceneManager.State.Setup)
-                    throw new InvalidOperationException("You can only set the current FreePlay bomb count in the Setup room.");
+                    throw new InvalidOperationException("You can only set the current Freeplay bomb count in the Setup room.");
                 if (value < 1)
                     throw new Exception("The bomb count must be greater than 0.");
                 if (value > MultipleBombsModManager.GetMaximumBombs())
