@@ -29,6 +29,8 @@ def build(config):
 
     print("Building assembly...")
     result = subprocess.run([config["msbuildPath"], "./MultipleBombsAssembly/MultipleBombsAssembly.sln", "/p:Configuration=Release"])
+    if result.returncode != 0:
+        return
     print("Assembly build completed")
 
     print("Building mod bundle...")
