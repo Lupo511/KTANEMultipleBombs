@@ -15,7 +15,7 @@ namespace MultipleBombsAssembly
     {
         private static FieldInfo currentMissionField;
         private static FieldInfo canStartField;
-        private MultipleBombs multipleBombs;
+        private SetupStateManager setupStateManager;
         private TournamentDetailPage page;
         private TextMeshPro textBombs;
 
@@ -25,9 +25,9 @@ namespace MultipleBombsAssembly
             canStartField = typeof(MissionDetailPage).GetField("canStartMission", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        public void Initialize(MultipleBombs multipleBombs)
+        public void Initialize(SetupStateManager setupStateManager)
         {
-            this.multipleBombs = multipleBombs;
+            this.setupStateManager = setupStateManager;
 
             page = GetComponent<TournamentDetailPage>();
 
@@ -41,12 +41,11 @@ namespace MultipleBombsAssembly
 
         private void OnEnable()
         {
-            StartCoroutine(setupPage());
+            setupStateManager.PostToStart(setupPage);
         }
 
         private void OnDisable()
         {
-            StopAllCoroutines();
             textBombs.gameObject.SetActive(false);
         }
 
@@ -55,18 +54,11 @@ namespace MultipleBombsAssembly
             Destroy(textBombs);
         }
 
-        private IEnumerator setupPage()
+        private void setupPage()
         {
-            //Make the page invisible while waiting for the modifications to avoid a visible flickering of the values
-            page.TextDescription.gameObject.SetActive(false);
-            page.TextTime.gameObject.SetActive(false);
-            page.TextModuleCount.gameObject.SetActive(false);
-            page.TextStrikes.gameObject.SetActive(false);
-            yield return null;
-            page.TextDescription.gameObject.SetActive(true);
-            page.TextTime.gameObject.SetActive(true);
-            page.TextModuleCount.gameObject.SetActive(true);
-            page.TextStrikes.gameObject.SetActive(true);
+            //Don't run if the object has been disabled
+            if (!enabled)
+                return;
 
             //Read the mission and update the page data
             Mission currentMission = (Mission)currentMissionField.GetValue(page);
