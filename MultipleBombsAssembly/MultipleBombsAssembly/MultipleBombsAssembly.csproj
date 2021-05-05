@@ -75,6 +75,7 @@
     <Compile Include="BombInfoProvider.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="DelegateUtils.cs" />
+    <Compile Include="StartNotifier.cs" />
     <Compile Include="StateCoroutine.cs" />
     <Compile Include="CoroutineTimeDelay.cs" />
     <Compile Include="FreeplayDeviceManager.cs" />
