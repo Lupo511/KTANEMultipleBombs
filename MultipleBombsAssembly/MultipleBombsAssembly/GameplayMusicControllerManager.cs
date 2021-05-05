@@ -39,6 +39,7 @@ namespace MultipleBombsAssembly
             gameplayMusicController.enabled = true;
         }
 
+        //To-do: check transitions when going backwards
         public void Update()
         {
             //Sets the current song index and plays the stinger considering the timer of all of the bombs
