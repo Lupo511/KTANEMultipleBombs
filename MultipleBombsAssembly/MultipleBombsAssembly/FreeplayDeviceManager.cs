@@ -22,6 +22,7 @@ namespace MultipleBombsAssembly
         {
             this.multipleBombs = multipleBombs;
 
+            //To-do: only load last setting according to the demo settings
             freeplaySettings = multipleBombs.LastFreeplaySettings;
         }
 
