@@ -19,7 +19,7 @@ namespace MultipleBombsAssembly
             SetupRoom setupRoom = setupState.Room.GetComponent<SetupRoom>();
 
             FreeplayDeviceManager = setupRoom.FreeplayDevice.gameObject.AddComponent<FreeplayDeviceManager>();
-            FreeplayDeviceManager.Initialize(multipleBombs);
+            FreeplayDeviceManager.Initialize(multipleBombs, this);
 
             MissionDetailPageManager missionDetailPageManager = setupRoom.BombBinder.MissionDetailPage.gameObject.AddComponent<MissionDetailPageManager>();
             missionDetailPageManager.Initialize(multipleBombs);

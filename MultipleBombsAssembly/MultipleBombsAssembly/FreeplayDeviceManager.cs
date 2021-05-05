@@ -12,21 +12,23 @@ namespace MultipleBombsAssembly
     public class FreeplayDeviceManager : MonoBehaviour
     {
         private MultipleBombs multipleBombs;
+        private SetupStateManager setupStateManager;
         private MultipleBombsFreeplaySettings freeplaySettings;
         private TextMeshPro bombsValue;
         private int maxBombs;
         private static float? vanillaMaxSecondsToSolve;
         private int maxModBombModules;
 
-        public void Initialize(MultipleBombs multipleBombs)
+        public void Initialize(MultipleBombs multipleBombs, SetupStateManager setupStateManager)
         {
             this.multipleBombs = multipleBombs;
+            this.setupStateManager = setupStateManager;
 
             //To-do: only load last setting according to the demo settings
             freeplaySettings = multipleBombs.LastFreeplaySettings;
         }
 
-        public IEnumerator Start()
+        public void Start()
         {
             maxBombs = MultipleBombsModManager.GetMaximumBombs();
             if (vanillaMaxSecondsToSolve == null)
@@ -158,16 +160,19 @@ namespace MultipleBombsAssembly
             DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountDecrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);
             DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountIncrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);
 
-            //We need to wait the next frame to patch event handlers after they've been assigned
-            yield return null;
+            //We need to wait for FreeplayDevice's Start method to finish to then patch the assigned events
+            setupStateManager.PostToStart(() =>
+            {
+                //Patch button push event handlers to calculate custom difficulty
+                freeplayDevice.ModuleCountDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                freeplayDevice.ModuleCountIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                freeplayDevice.TimeDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                freeplayDevice.TimeIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                freeplayDevice.NeedyToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                freeplayDevice.HardcoreToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
 
-            //Patch button push event handlers to calculate custom difficulty
-            freeplayDevice.ModuleCountDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
-            freeplayDevice.ModuleCountIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
-            freeplayDevice.TimeDecrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
-            freeplayDevice.TimeIncrement.OnPush += () => { updateFreeplayDeviceDifficulty(freeplayDevice); };
-            freeplayDevice.NeedyToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
-            freeplayDevice.HardcoreToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
+                Debug.Log("[MultipleBombs]Freeplay events patched")
+            });
 
             Debug.Log("[MultipleBombs]FreePlay option added");
         }
