@@ -171,7 +171,7 @@ namespace MultipleBombsAssembly
                 freeplayDevice.NeedyToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
                 freeplayDevice.HardcoreToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
 
-                Debug.Log("[MultipleBombs]Freeplay events patched")
+                Debug.Log("[MultipleBombs]Freeplay events patched");
             });
 
             Debug.Log("[MultipleBombs]Freeplay option added");
