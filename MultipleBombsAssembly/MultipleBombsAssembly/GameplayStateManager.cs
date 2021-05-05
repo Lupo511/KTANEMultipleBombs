@@ -100,21 +100,16 @@ namespace MultipleBombsAssembly
             Debug.Log("[MultipleBombs]Events initialized");
 
             //Setup results screen
-            ResultPageMonitor freePlayDefusedPageMonitor = SceneManager.Instance.PostGameState.Room.BombBinder.ResultFreeplayDefusedPage.gameObject.AddComponent<ResultPageMonitor>();
-            freePlayDefusedPageMonitor.MultipleBombs = multipleBombs;
-            freePlayDefusedPageMonitor.SetCurrentMission(currentMission);
-            ResultPageMonitor freePlayExplodedPageMonitor = SceneManager.Instance.PostGameState.Room.BombBinder.ResultFreeplayExplodedPage.gameObject.AddComponent<ResultPageMonitor>();
-            freePlayExplodedPageMonitor.MultipleBombs = multipleBombs;
-            freePlayExplodedPageMonitor.SetCurrentMission(currentMission);
-            ResultPageMonitor missionDefusedPageMonitor = SceneManager.Instance.PostGameState.Room.BombBinder.ResultDefusedPage.gameObject.AddComponent<ResultPageMonitor>();
-            missionDefusedPageMonitor.MultipleBombs = multipleBombs;
-            missionDefusedPageMonitor.SetCurrentMission(currentMission);
-            ResultPageMonitor missionExplodedPageMonitor = SceneManager.Instance.PostGameState.Room.BombBinder.ResultExplodedPage.gameObject.AddComponent<ResultPageMonitor>();
-            missionExplodedPageMonitor.MultipleBombs = multipleBombs;
-            missionExplodedPageMonitor.SetCurrentMission(currentMission);
-            ResultPageMonitor tournamentPageMonitor = SceneManager.Instance.PostGameState.Room.BombBinder.ResultTournamentPage.gameObject.AddComponent<ResultPageMonitor>();
-            tournamentPageMonitor.MultipleBombs = multipleBombs;
-            tournamentPageMonitor.SetCurrentMission(currentMission);
+            ResultFreeplayPageManager freeplayDefusedPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultFreeplayDefusedPage.gameObject.AddComponent<ResultFreeplayPageManager>();
+            freeplayDefusedPageManager.Initialize(this, currentMission);
+            ResultFreeplayPageManager freeplayExplodedPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultFreeplayExplodedPage.gameObject.AddComponent<ResultFreeplayPageManager>();
+            freeplayExplodedPageManager.Initialize(this, currentMission);
+            ResultMissionPageManager missionDefusedPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultDefusedPage.gameObject.AddComponent<ResultMissionPageManager>();
+            missionDefusedPageManager.Initialize(this, currentMission);
+            ResultMissionPageManager missionExplodedPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultExplodedPage.gameObject.AddComponent<ResultMissionPageManager>();
+            missionExplodedPageManager.Initialize(this, currentMission);
+            ResultMissionPageManager tournamentPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultTournamentPage.gameObject.AddComponent<ResultMissionPageManager>();
+            tournamentPageManager.Initialize(this, currentMission);
             Debug.Log("[MultipleBombs]Result screens initialized");
 
             //Let the game generate the bomb and then continue setup
