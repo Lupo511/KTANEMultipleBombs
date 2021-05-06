@@ -18,6 +18,7 @@ namespace MultipleBombsAssembly
         private KMGameCommands gameCommands;
         private MultipleBombsMissionDetails currentMission;
         private BombInfoProvider bombInfoProvider;
+        private PaceMakerManager paceMakerManager;
         private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentPassEvent> bombComponentPassEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent> bombComponentStrikeEvents;
@@ -111,6 +112,10 @@ namespace MultipleBombsAssembly
             ResultMissionPageManager tournamentPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultTournamentPage.gameObject.AddComponent<ResultMissionPageManager>();
             tournamentPageManager.Initialize(this, currentMission);
             Debug.Log("[MultipleBombs]Result screens initialized");
+
+            //Setup pacing events
+            paceMakerManager = UnityEngine.Object.FindObjectOfType<PaceMaker>().gameObject.AddComponent<PaceMakerManager>();
+            Debug.Log("[MultipleBombs]Pacing events initalized");
 
             //Let the game generate the bomb and then continue setup
             PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
@@ -225,22 +230,13 @@ namespace MultipleBombsAssembly
 
                 vanillaBomb.GetComponent<Selectable>().Parent.Init();
                 Debug.Log("[MultipleBombs]All bombs generated");
-
-                //Setup pacing events
-                //To-do: move event subscribing to pace maker and monitor creation to first frame
-                PaceMakerMonitor monitor = UnityEngine.Object.FindObjectOfType<PaceMaker>().gameObject.AddComponent<PaceMakerMonitor>();
-                foreach (Bomb bomb in SceneManager.Instance.GameplayState.Bombs)
-                {
-                    if (bomb != vanillaBomb) //The vanilla bomb is still handled by PaceMaker
-                        bomb.GetTimer().TimerTick = (TimerComponent.TimerTickEvent)Delegate.Combine(bomb.GetTimer().TimerTick, new TimerComponent.TimerTickEvent((elapsed, remaining) => monitor.OnBombTimerTick(bomb, elapsed, remaining)));
-                }
-                Debug.Log("[MultipleBombs]Pacing events initalized");
             }
         }
 
         private IEnumerator<ICoroutineYieldable> StartRound(GameplayState gameplayState)
         {
             yield return new CoroutineTimeDelay(2);
+
             foreach (Bomb bomb in gameplayState.Bombs)
             {
                 if (bomb != gameplayState.Bomb)
@@ -251,6 +247,10 @@ namespace MultipleBombsAssembly
                     Debug.Log("[MultipleBombs]Custom bomb timer activated");
                 }
             }
+
+            yield return new CoroutineTimeDelay(6);
+
+            paceMakerManager.StartRound();
         }
 
         public Bomb CreateBomb(KMGeneratorSetting generatorSetting, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)

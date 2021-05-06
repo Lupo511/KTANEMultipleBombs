@@ -9,31 +9,48 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public class PaceMakerMonitor : MonoBehaviour
+    public class PaceMakerManager : MonoBehaviour
     {
         private PaceMaker paceMaker;
-        private FieldInfo isActiveField;
+        private static FieldInfo isActiveField;
+        private static FieldInfo minSecondsField;
+        private static FieldInfo maxSecondsField;
         private float secondsUntilNextIdleAction;
         private float MIN_SECONDS_BETWEEN_IDLE_ACTIONS;
         private float MAX_SECONDS_BETWEEN_IDLE_ACTIONS;
         private List<Bomb> oneMinuteLeftBombs;
 
+        static PaceMakerManager()
+        {
+            isActiveField = typeof(PaceMaker).GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
+            minSecondsField = typeof(PaceMaker).GetField("MIN_SECONDS_BETWEEN_IDLE_ACTIONS", BindingFlags.Instance | BindingFlags.NonPublic);
+            maxSecondsField = typeof(PaceMaker).GetField("MAX_SECONDS_BETWEEN_IDLE_ACTIONS", BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+
         public void Awake()
         {
             paceMaker = GetComponent<PaceMaker>();
-            isActiveField = paceMaker.GetType().GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
-            MIN_SECONDS_BETWEEN_IDLE_ACTIONS = (float)paceMaker.GetType().GetField("MIN_SECONDS_BETWEEN_IDLE_ACTIONS", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(paceMaker);
-            MAX_SECONDS_BETWEEN_IDLE_ACTIONS = (float)paceMaker.GetType().GetField("MAX_SECONDS_BETWEEN_IDLE_ACTIONS", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(paceMaker);
+            MIN_SECONDS_BETWEEN_IDLE_ACTIONS = (float)minSecondsField.GetValue(paceMaker);
+            MAX_SECONDS_BETWEEN_IDLE_ACTIONS = (float)maxSecondsField.GetValue(paceMaker);
             oneMinuteLeftBombs = new List<Bomb>();
+
+            //Disable default PaceMaker Update
+            paceMaker.enabled = false;
         }
 
-        public void Start()
+        public void StartRound()
         {
-            paceMaker.enabled = false;
+            foreach (Bomb bomb in SceneManager.Instance.GameplayState.Bombs)
+            {
+                //The vanilla bomb timer tick is still handled by the vanilla PaceMaker
+                if (bomb != SceneManager.Instance.GameplayState.Bomb)
+                    bomb.GetTimer().TimerTick += (elapsed, remaining) => onBombTimerTick(bomb, elapsed, remaining);
+            }
+
             secondsUntilNextIdleAction = UnityEngine.Random.Range(MIN_SECONDS_BETWEEN_IDLE_ACTIONS, MAX_SECONDS_BETWEEN_IDLE_ACTIONS);
         }
 
-        public void OnBombTimerTick(Bomb bomb, int elapsed, int remaining)
+        private void onBombTimerTick(Bomb bomb, int elapsed, int remaining)
         {
             if (remaining < 60 && !oneMinuteLeftBombs.Contains(bomb))
             {
@@ -42,6 +59,7 @@ namespace MultipleBombsAssembly
             }
         }
 
+        //Replicates the default PaceMaker Update but using custom CalculateCustomSuccessRating function
         public void Update()
         {
             if ((bool)isActiveField.GetValue(paceMaker))
@@ -64,6 +82,7 @@ namespace MultipleBombsAssembly
             }
         }
 
+        //Custom success rating calculation accounting for all of the bombs
         public float CalculateCustomSuccessRating()
         {
             if (SceneManager.Instance.GameplayState.Bombs.Count == 0)

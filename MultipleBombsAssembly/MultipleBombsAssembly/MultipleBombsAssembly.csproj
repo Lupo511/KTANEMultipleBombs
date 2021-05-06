@@ -96,7 +96,7 @@
     <Compile Include="PropertiesBehaviour.cs" />
     <Compile Include="MissionDetailPageManager.cs" />
     <Compile Include="MultipleBombs.cs" />
-    <Compile Include="PaceMakerMonitor.cs" />
+    <Compile Include="PaceMakerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransformExtension.cs" />
     <Compile Include="VRTester.cs" />
