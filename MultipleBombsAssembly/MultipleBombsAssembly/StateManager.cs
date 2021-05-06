@@ -10,12 +10,14 @@ namespace MultipleBombsAssembly
         private StartNotifier currentStartNotifier;
         private Queue<Action> startPostedDelegates;
         private Queue<Action> lateUpdatePostedDelegates;
+        private Queue<StateCoroutine> newCoroutines;
         private List<StateCoroutine> coroutines;
 
         public StateManager()
         {
             startPostedDelegates = new Queue<Action>();
             lateUpdatePostedDelegates = new Queue<Action>();
+            newCoroutines = new Queue<StateCoroutine>();
             coroutines = new List<StateCoroutine>();
         }
 
@@ -34,11 +36,17 @@ namespace MultipleBombsAssembly
             currentStartNotifier = null;
         }
 
-        public void RunLateUpdateDelegates()
+        public void RunLateUpdate()
         {
             while (lateUpdatePostedDelegates.Count > 0)
             {
                 lateUpdatePostedDelegates.Dequeue()();
+            }
+
+            //Note: since new coroutines are added in LateUpdate, starting a coroutine from another object's LateUpdate that runs after this will make the coroutine skip 1 frame
+            while (newCoroutines.Count > 0)
+            {
+                coroutines.Add(newCoroutines.Dequeue());
             }
         }
 
@@ -70,7 +78,7 @@ namespace MultipleBombsAssembly
 
         public void StartCoroutine(IEnumerator<ICoroutineYieldable> enumerator)
         {
-            coroutines.Add(new StateCoroutine(enumerator));
+            newCoroutines.Enqueue(new StateCoroutine(enumerator));
         }
     }
 }

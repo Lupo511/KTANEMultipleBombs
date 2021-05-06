@@ -48,7 +48,7 @@ namespace MultipleBombsAssembly
             if (CurrentState != null)
             {
                 CurrentState.LateUpdate();
-                CurrentState.RunLateUpdateDelegates();
+                CurrentState.RunLateUpdate();
             }
         }
 

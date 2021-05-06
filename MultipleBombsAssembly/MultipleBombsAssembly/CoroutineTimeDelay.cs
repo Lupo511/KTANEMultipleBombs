@@ -11,7 +11,7 @@ namespace MultipleBombsAssembly
     public class CoroutineTimeDelay : ICoroutineYieldable
     {
         private float secondsDelay;
-        private float? timeElapsed;
+        private float timeElapsed;
 
         public bool IsFinished
         {
@@ -28,10 +28,7 @@ namespace MultipleBombsAssembly
 
         public void Update()
         {
-            if (timeElapsed == null)
-                timeElapsed = 0;
-            else
-                timeElapsed += Time.deltaTime;
+            timeElapsed += Time.deltaTime;
         }
     }
 }
