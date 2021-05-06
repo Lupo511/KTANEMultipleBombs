@@ -92,7 +92,7 @@ namespace MultipleBombsAssembly
                     float timeRatio = timeRemaining / totalTime;
                     if (gameplayMusicController.Settings.useCrossfade)
                     {
-                        newSongIndex = Mathf.Clamp(playlistController.CurrentPlaylist.MusicSettings.Count - (int)(timeRatio * playlistController.CurrentPlaylist.MusicSettings.Count), 0, playlistController.CurrentPlaylist.MusicSettings.Count);
+                        newSongIndex = Mathf.Clamp(playlistController.CurrentPlaylist.MusicSettings.Count - (int)(timeRatio * playlistController.CurrentPlaylist.MusicSettings.Count), 0, playlistController.CurrentPlaylist.MusicSettings.Count - 1);
                     }
                     else
                     {
