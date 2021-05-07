@@ -276,6 +276,11 @@ namespace MultipleBombsAssembly
             return CreateBomb(GeneratorSettingUtils.CreateModFromGeneratorSetting(generatorSetting), position, eulerAngles, seed, knownBombInfos);
         }
 
+        public Bomb CreateBomb(int generatorSettingIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
+        {
+            return CreateBomb(currentMission.GeneratorSettings[generatorSettingIndex], position, eulerAngles, seed, knownBombInfos);
+        }
+
         private List<KMBombInfo> redirectNewBombInfos(Bomb bomb, List<KMBombInfo> knownBombInfos)
         {
             if (knownBombInfos == null)

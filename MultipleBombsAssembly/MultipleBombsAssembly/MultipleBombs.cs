@@ -86,7 +86,17 @@ namespace MultipleBombsAssembly
             Debug.Log("[MultipleBombs]Destroyed");
         }
 
-        //To-do: readd create bomb method used by factory
+        //This is the interface for Factory
+        private Bomb createBomb(int generatorSettingIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
+        {
+            if (!(gameManager.CurrentState is GameplayStateManager gameplayStateManager))
+                throw new InvalidOperationException("Bomb can only be spawned while in the Gameplay state.");
+
+            if (knownBombInfos == null)
+                knownBombInfos.AddRange(FindObjectsOfType<KMBombInfo>());
+
+            return gameplayStateManager.CreateBomb(generatorSettingIndex, position, eulerAngles, seed, knownBombInfos);
+        }
 
         public int CurrentFreeplayBombCount
         {
