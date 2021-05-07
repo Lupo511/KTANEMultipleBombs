@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
-    public static class TransformExtension
+    public static class TransformExtensions
     {
         public static Transform FindRecursive(this Transform transform, string name)
         {

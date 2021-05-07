@@ -99,7 +99,7 @@
     <Compile Include="MultipleBombs.cs" />
     <Compile Include="PaceMakerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransformExtension.cs" />
+    <Compile Include="TransformExtensions.cs" />
     <Compile Include="VRTester.cs" />
   </ItemGroup>
   <ItemGroup>
