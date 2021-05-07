@@ -63,7 +63,7 @@ namespace MultipleBombsAssembly
             //Select a valid room for the required bomb count
             if (currentMission.BombCount > 1 && GameplayState.GameplayRoomPrefabOverride == null)
             {
-                Debug.Log("[MultipleBombs]Initializing room");
+                Logger.Log("Initializing room");
                 List<GameplayRoom> rooms = new List<GameplayRoom>();
                 if (currentMission.BombCount <= 2) //To-do: match game behaviour and only pick default room if no valid mod rooms are available?
                     rooms.Add(gameplayState.GameplayRoomPool.Default.GetComponent<GameplayRoom>());
@@ -75,7 +75,7 @@ namespace MultipleBombsAssembly
                 }
                 if (rooms.Count == 0) //To-do: match game behaviour and use default room with less bombs if no room is available?
                 {
-                    Debug.Log("[MultipleBombs]No room found that supports " + currentMission.BombCount + " bombs");
+                    Logger.Log("No room found that supports " + currentMission.BombCount + " bombs");
                     SceneManager.Instance.ReturnToSetupState();
                     return;
                 }
@@ -90,7 +90,7 @@ namespace MultipleBombsAssembly
                     gameplayStateLightBulbField.SetValue(SceneManager.Instance.GameplayState, GameObject.Find("LightBulb"));
                     room.SetActive(false);
                     UnityEngine.Object.FindObjectOfType<BombGenerator>().BombPrefabOverride = room.GetComponent<GameplayRoom>().BombPrefabOverride;
-                    Debug.Log("[MultipleBombs]Room initialized");
+                    Logger.Log("Room initialized");
                 }
             }
 
@@ -98,7 +98,7 @@ namespace MultipleBombsAssembly
             BombComponentEvents.OnComponentPass += onComponentPassEvent;
             BombComponentEvents.OnComponentStrike += onComponentStrikeEvent;
             BombEvents.OnBombDetonated += onBombDetonatedEvent;
-            Debug.Log("[MultipleBombs]Events initialized");
+            Logger.Log("Events initialized");
 
             //Setup results screen
             ResultFreeplayPageManager freeplayDefusedPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultFreeplayDefusedPage.gameObject.AddComponent<ResultFreeplayPageManager>();
@@ -111,11 +111,11 @@ namespace MultipleBombsAssembly
             missionExplodedPageManager.Initialize(this, currentMission);
             ResultMissionPageManager tournamentPageManager = SceneManager.Instance.PostGameState.Room.BombBinder.ResultTournamentPage.gameObject.AddComponent<ResultMissionPageManager>();
             tournamentPageManager.Initialize(this, currentMission);
-            Debug.Log("[MultipleBombs]Result screens initialized");
+            Logger.Log("Result screens initialized");
 
             //Setup pacing events
             paceMakerManager = UnityEngine.Object.FindObjectOfType<PaceMaker>().gameObject.AddComponent<PaceMakerManager>();
-            Debug.Log("[MultipleBombs]Pacing events initalized");
+            Logger.Log("Pacing events initalized");
 
             //Let the game generate the bomb and then continue setup
             PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
@@ -132,9 +132,9 @@ namespace MultipleBombsAssembly
                 mission.GeneratorSetting.ComponentPools.AddRange(multipleBombsComponentPools);
             }
 
-            Debug.Log("[MultipleBombs]Setting up bombs");
+            Logger.Log("Setting up bombs");
 
-            Debug.Log("[MultipleBombs]Bombs to spawn: " + currentMission.BombCount);
+            Logger.Log("Bombs to spawn: " + currentMission.BombCount);
 
             if (currentMission.BombCount > 1)
             {
@@ -159,7 +159,7 @@ namespace MultipleBombsAssembly
                 redirectedBombInfos.AddRange(redirectNewBombInfos(vanillaBomb, redirectedBombInfos));
 
                 processBombEvents(vanillaBomb);
-                Debug.Log("[MultipleBombs]Vanilla bomb initialized");
+                Logger.Log("Vanilla bomb initialized");
 
                 //Create a random to generate subsequent bomb seeds
                 System.Random random;
@@ -229,7 +229,7 @@ namespace MultipleBombsAssembly
                 }
 
                 vanillaBomb.GetComponent<Selectable>().Parent.Init();
-                Debug.Log("[MultipleBombs]All bombs generated");
+                Logger.Log("All bombs generated");
             }
         }
 
@@ -241,10 +241,10 @@ namespace MultipleBombsAssembly
             {
                 if (bomb != gameplayState.Bomb)
                 {
-                    Debug.Log("[MultipleBombs]Activating custom bomb timer");
+                    Logger.Log("Activating custom bomb timer");
                     bomb.GetTimer().text.gameObject.SetActive(true);
                     bomb.GetTimer().LightGlow.enabled = true;
-                    Debug.Log("[MultipleBombs]Custom bomb timer activated");
+                    Logger.Log("Custom bomb timer activated");
                 }
             }
 
@@ -255,19 +255,19 @@ namespace MultipleBombsAssembly
 
         public Bomb CreateBomb(KMGeneratorSetting generatorSetting, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
         {
-            Debug.Log("[MultipleBombs]Creating new bomb");
+            Logger.Log("Creating new bomb");
             GameObject spawnPointGO = new GameObject("CustomBombSpawnPoint");
             spawnPointGO.transform.position = position;
             spawnPointGO.transform.eulerAngles = eulerAngles;
             Bomb bomb = gameCommands.CreateBomb(null, generatorSetting, spawnPointGO, seed.ToString()).GetComponent<Bomb>();
-            Debug.Log("[MultipleBombs]Bomb spawned");
+            Logger.Log("Bomb spawned");
 
             List<KMBombInfo> newBombInfos = redirectNewBombInfos(bomb, knownBombInfos);
             knownBombInfos?.AddRange(newBombInfos);
-            Debug.Log("[MultipleBombs]KMBombInfos redirected");
+            Logger.Log("KMBombInfos redirected");
 
             processBombEvents(bomb);
-            Debug.Log("[MultipleBombs]Bomb created");
+            Logger.Log("Bomb created");
             return bomb;
         }
 
@@ -332,7 +332,7 @@ namespace MultipleBombsAssembly
 
         private bool onComponentPass(BombComponent source)
         {
-            Debug.Log("[MultipleBombs]A component was solved");
+            Logger.Log("A component was solved");
 
             if (source.Bomb.HasDetonated)
                 return false;
@@ -341,7 +341,7 @@ namespace MultipleBombsAssembly
 
             if (source.Bomb.IsSolved())
             {
-                Debug.Log("[MultipleBombs]A bomb was solved (A winner is you!!)");
+                Logger.Log("A bomb was solved (A winner is you!!)");
 
                 source.Bomb.GetTimer().StopTimer();
                 source.Bomb.GetTimer().Blink(1.5f);
@@ -361,7 +361,7 @@ namespace MultipleBombsAssembly
                     if (!bomb.IsSolved())
                         return true;
 
-                Debug.Log("[MultipleBombs]All bombs solved, what a winner!");
+                Logger.Log("All bombs solved, what a winner!");
 
                 GameRecord currentRecord = RecordManager.Instance.GetCurrentRecord();
 

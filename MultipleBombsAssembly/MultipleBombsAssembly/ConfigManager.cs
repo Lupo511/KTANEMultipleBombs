@@ -26,12 +26,12 @@ namespace MultipleBombsAssembly
                 string[] kv = line.Split('=');
                 if (kv.Length < 2)
                 {
-                    Debug.Log("[MultipleBombs]Error in config file at line " + i + ": couldn't parse key=value pair");
+                    Logger.Log("Error in config file at line " + i + ": couldn't parse key=value pair");
                     continue;
                 }
                 if (pairs.ContainsKey(kv[0]))
                 {
-                    Debug.Log("[MultipleBombs]Error in config file at line " + i + ": key \"" + kv[0] + "\" already defined");
+                    Logger.Log("Error in config file at line " + i + ": key \"" + kv[0] + "\" already defined");
                     continue;
                 }
                 pairs.Add(kv[0], kv[1]);

@@ -75,6 +75,7 @@
     <Compile Include="BombInfoProvider.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="DelegateUtils.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ResultFreeplayPageManager.cs" />
     <Compile Include="ResultMissionPageManager.cs" />
     <Compile Include="StartNotifier.cs" />

@@ -14,7 +14,7 @@ namespace MultipleBombsAssembly
 
         public SetupStateManager(MultipleBombs multipleBombs, SetupState setupState)
         {
-            Debug.Log("[MultipleBombs]Setting up setup state");
+            Logger.Log("Setting up setup state");
 
             SetupRoom setupRoom = setupState.Room.GetComponent<SetupRoom>();
 
@@ -30,7 +30,7 @@ namespace MultipleBombsAssembly
                 tournamentDetailPageManager.Initialize(this);
             }
 
-            Debug.Log("[MultipleBombs]Setup state set up");
+            Logger.Log("Setup state set up");
         }
     }
 }

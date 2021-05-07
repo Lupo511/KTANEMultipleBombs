@@ -28,7 +28,7 @@ namespace MultipleBombsAssembly
 
         public void Awake()
         {
-            Debug.Log("[MultipleBombs]Initializing");
+            Logger.Log("Initializing");
 
             DestroyImmediate(GetComponent<KMService>()); //Hide from Mod Selector
 
@@ -44,13 +44,13 @@ namespace MultipleBombsAssembly
             publicProperties = infoObject.AddComponent<MultipleBombsProperties>();
             publicProperties.MultipleBombs = this;
 
-            Debug.Log("[MultipleBombs]Basic initialization finished");
+            Logger.Log("Basic initialization finished");
 
             GameplayMusicControllerManager = MusicManager.Instance.GameplayMusicController.gameObject.AddComponent<GameplayMusicControllerManager>();
 
             StartCoroutine(UpdateCoroutine());
 
-            Debug.Log("[MultipleBombs]Initialized");
+            Logger.Log("Initialized");
         }
 
         public void Update()
@@ -78,12 +78,12 @@ namespace MultipleBombsAssembly
             if (SceneManager.Instance != null && SceneManager.Instance.CurrentState != SceneManager.State.ModManager)
                 throw new NotImplementedException();
 
-            Debug.Log("[MultipleBombs]Destroying");
+            Logger.Log("Destroying");
 
             if (GameplayMusicControllerManager != null)
                 Destroy(GameplayMusicControllerManager);
 
-            Debug.Log("[MultipleBombs]Destroyed");
+            Logger.Log("Destroyed");
         }
 
         //This is the interface for Factory

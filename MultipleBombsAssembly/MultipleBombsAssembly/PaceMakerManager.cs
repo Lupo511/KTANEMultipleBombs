@@ -70,14 +70,14 @@ namespace MultipleBombsAssembly
                     float successRating = CalculateCustomSuccessRating();
                     if (UnityEngine.Random.value < 0.1)
                     {
-                        Debug.Log("[MultipleBombs-PaceMaker]Skipping idle action for variety's sake");
+                        Logger.Log("[PaceMaker]Skipping idle action for variety's sake");
                     }
                     else if (successRating > 0.5f)
                     {
                         paceMaker.ExecuteRandomAction(PaceEvent.Idle_DoingWell);
                     }
                     secondsUntilNextIdleAction = UnityEngine.Random.Range(MIN_SECONDS_BETWEEN_IDLE_ACTIONS, MAX_SECONDS_BETWEEN_IDLE_ACTIONS);
-                    Debug.Log("[MultipleBombs-PaceMaker]Next idle action in " + secondsUntilNextIdleAction + " seconds");
+                    Logger.Log("[PaceMaker]Next idle action in " + secondsUntilNextIdleAction + " seconds");
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace MultipleBombsAssembly
                 timeFactor = Mathf.Clamp(Mathf.Lerp(0f, 1f, timeRemaining / totalTime), 0f, 1f) * timeFactorMultiplier;
             }
             float successRating = Mathf.Clamp(solvedFactor + strikesFactor + timeFactor, 0f, 1f);
-            Debug.LogFormat("[MultipleBombs-PaceMaker]PlayerSuccessRating: {0} (Factors: solved: {1}, strikes: {2}, time: {3})", successRating, solvedFactor, strikesFactor, timeFactor);
+            Logger.Log(string.Format("[PaceMaker]PlayerSuccessRating: {0} (Factors: solved: {1}, strikes: {2}, time: {3})", successRating, solvedFactor, strikesFactor, timeFactor));
             return successRating;
         }
     }

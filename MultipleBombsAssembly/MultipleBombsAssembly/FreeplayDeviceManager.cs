@@ -35,7 +35,7 @@ namespace MultipleBombsAssembly
                 vanillaMaxSecondsToSolve = FreeplayDevice.MAX_SECONDS_TO_SOLVE;
             maxModBombModules = ModManager.Instance.GetMaximumModules();
 
-            Debug.Log("[MultipleBombs]Adding Freeplay option");
+            Logger.Log("Adding Freeplay option");
 
             FreeplayDevice freeplayDevice = GetComponent<FreeplayDevice>();
 
@@ -171,10 +171,10 @@ namespace MultipleBombsAssembly
                 freeplayDevice.NeedyToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
                 freeplayDevice.HardcoreToggle.OnToggle += (bool toggleState) => { updateFreeplayDeviceDifficulty(freeplayDevice); };
 
-                Debug.Log("[MultipleBombs]Freeplay events patched");
+                Logger.Log("Freeplay events patched");
             });
 
-            Debug.Log("[MultipleBombs]Freeplay option added");
+            Logger.Log("Freeplay option added");
         }
 
         public void Update()
