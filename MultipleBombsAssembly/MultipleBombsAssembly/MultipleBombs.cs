@@ -87,15 +87,34 @@ namespace MultipleBombsAssembly
         }
 
         //This is the interface for Factory
-        private Bomb createBomb(int generatorSettingIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
+        private Bomb createBomb(int bombIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
         {
             if (!(gameManager.CurrentState is GameplayStateManager gameplayStateManager))
                 throw new InvalidOperationException("Bomb can only be spawned while in the Gameplay state.");
 
+            MultipleBombsMissionDetails mission = null;
+            if (GameplayState.MissionToLoad == FreeplayMissionGenerator.FREEPLAY_MISSION_ID)
+            {
+                mission = new MultipleBombsMissionDetails(CurrentFreeplayBombCount, FreeplayMissionGenerator.Generate(GameplayState.FreeplaySettings).GeneratorSetting);
+            }
+            else if (GameplayState.MissionToLoad == ModMission.CUSTOM_MISSION_ID)
+            {
+
+                mission = MultipleBombsMissionDetails.ReadMission(GameplayState.CustomMission);
+            }
+            else
+            {
+                mission = MultipleBombsMissionDetails.ReadMission(MissionManager.Instance.GetMission(GameplayState.MissionToLoad));
+            }
+
+            GeneratorSetting generatorSetting;
+            if (!mission.GeneratorSettings.TryGetValue(bombIndex, out generatorSetting))
+                generatorSetting = mission.GeneratorSettings[0];
+
             if (knownBombInfos == null)
                 knownBombInfos = FindObjectsOfType<KMBombInfo>().ToList();
 
-            return gameplayStateManager.CreateBomb(generatorSettingIndex, position, eulerAngles, seed, knownBombInfos);
+            return gameplayStateManager.CreateBomb(generatorSetting, position, eulerAngles, seed, knownBombInfos);
         }
 
         public int CurrentFreeplayBombCount
