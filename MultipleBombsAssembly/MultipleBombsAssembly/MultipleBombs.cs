@@ -93,7 +93,7 @@ namespace MultipleBombsAssembly
                 throw new InvalidOperationException("Bomb can only be spawned while in the Gameplay state.");
 
             if (knownBombInfos == null)
-                knownBombInfos.AddRange(FindObjectsOfType<KMBombInfo>());
+                knownBombInfos = FindObjectsOfType<KMBombInfo>().ToList();
 
             return gameplayStateManager.CreateBomb(generatorSettingIndex, position, eulerAngles, seed, knownBombInfos);
         }
