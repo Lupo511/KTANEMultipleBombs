@@ -122,13 +122,13 @@ namespace MultipleBombsAssembly
             Logger.Log("Pacing events initalized");
 
             //Let the game generate the bomb and then continue setup
-            PostToLateUpdate(() => setupBombs(gameplayState, mission, multipleBombsComponentPools));
+            PostToLateUpdate(() => setupBombs(mission, multipleBombsComponentPools));
 
             //Start the start round coroutine
-            StartCoroutine(StartRound(gameplayState));
+            StartCoroutine(StartRound());
         }
 
-        private void setupBombs(GameplayState gameplayState, Mission mission, List<ComponentPool> multipleBombsComponentPools)
+        private void setupBombs(Mission mission, List<ComponentPool> multipleBombsComponentPools)
         {
             //Restore MultipleBombs previously removed component pools
             if (GameplayState.MissionToLoad == ModMission.CUSTOM_MISSION_ID || GameplayState.MissionToLoad != FreeplayMissionGenerator.FREEPLAY_MISSION_ID)
@@ -237,7 +237,7 @@ namespace MultipleBombsAssembly
             }
         }
 
-        private IEnumerator<ICoroutineYieldable> StartRound(GameplayState gameplayState)
+        private IEnumerator<ICoroutineYieldable> StartRound()
         {
             yield return new CoroutineTimeDelay(2);
 
