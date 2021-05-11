@@ -21,9 +21,13 @@ namespace MultipleBombsAssembly
             coroutines = new List<StateCoroutine>();
         }
 
+        public virtual void EnterState() { }
+
         public virtual void Update() { }
 
         public virtual void LateUpdate() { }
+
+        public virtual void ExitState() { }
 
         private void CurrentStartNotifier_OnStart()
         {

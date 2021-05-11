@@ -15,6 +15,8 @@ namespace MultipleBombsAssembly
     {
         private static FieldInfo gameplayStateRoomGOField;
         private static FieldInfo gameplayStateLightBulbField;
+        private MultipleBombs multipleBombs;
+        private GameplayState gameplayState;
         private KMGameCommands gameCommands;
         private MultipleBombsMissionDetails currentMission;
         private BombInfoProvider bombInfoProvider;
@@ -31,14 +33,16 @@ namespace MultipleBombsAssembly
 
         public GameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
         {
+            this.multipleBombs = multipleBombs;
+            this.gameplayState = gameplayState;
             this.gameCommands = gameCommands;
-            if (bombSolvedEvents == null)
-                bombSolvedEvents = new Dictionary<Bomb, BombEvents.BombSolvedEvent>();
-            if (bombComponentPassEvents == null)
-                bombComponentPassEvents = new Dictionary<Bomb, BombComponentEvents.ComponentPassEvent>();
-            if (bombComponentStrikeEvents == null)
-                bombComponentStrikeEvents = new Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent>();
+            bombSolvedEvents = new Dictionary<Bomb, BombEvents.BombSolvedEvent>();
+            bombComponentPassEvents = new Dictionary<Bomb, BombComponentEvents.ComponentPassEvent>();
+            bombComponentStrikeEvents = new Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent>();
+        }
 
+        public override void EnterState()
+        {
             //Process mission to load
             List<ComponentPool> multipleBombsComponentPools = null;
             Mission mission = null;

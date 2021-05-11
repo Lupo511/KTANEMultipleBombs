@@ -23,6 +23,7 @@ namespace MultipleBombsAssembly
         {
             if (CurrentState != null)
             {
+                CurrentState.ExitState();
                 CurrentState = null;
             }
 
@@ -34,6 +35,11 @@ namespace MultipleBombsAssembly
                 case KMGameInfo.State.Gameplay:
                     CurrentState = new GameplayStateManager(multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
                     break;
+            }
+
+            if (CurrentState != null)
+            {
+                CurrentState.EnterState();
             }
         }
 

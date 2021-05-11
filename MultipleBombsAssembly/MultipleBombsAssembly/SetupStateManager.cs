@@ -10,9 +10,17 @@ namespace MultipleBombsAssembly
 {
     public class SetupStateManager : StateManager
     {
-        public FreeplayDeviceManager FreeplayDeviceManager { get; }
+        public FreeplayDeviceManager FreeplayDeviceManager { get; private set; }
+        private MultipleBombs multipleBombs;
+        private SetupState setupState;
 
         public SetupStateManager(MultipleBombs multipleBombs, SetupState setupState)
+        {
+            this.multipleBombs = multipleBombs;
+            this.setupState = setupState;
+        }
+
+        public override void EnterState()
         {
             Logger.Log("Setting up setup state");
 
