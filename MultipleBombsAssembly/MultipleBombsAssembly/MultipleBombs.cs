@@ -90,7 +90,7 @@ namespace MultipleBombsAssembly
         private Bomb createBomb(int bombIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
         {
             if (!(gameManager.CurrentState is GameplayStateManager gameplayStateManager))
-                throw new InvalidOperationException("Bomb can only be spawned while in the Gameplay state.");
+                throw new InvalidOperationException("Bombs can only be spawned while in the Gameplay state.");
 
             MultipleBombsMissionDetails mission = null;
             if (GameplayState.MissionToLoad == FreeplayMissionGenerator.FREEPLAY_MISSION_ID)
