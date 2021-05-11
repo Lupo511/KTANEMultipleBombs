@@ -44,7 +44,8 @@ namespace MultipleBombsAssembly
             if (!enabled)
                 return;
 
-            MissionDetailPageManager.UpdateMissionDetailInformation(currentMission, null, MultipleBombsModManager.GetMaximumBombs(), null, page.InitialTime, page.NumModules, page.NumStrikes, numBombs);
+            if (currentMission.BombCount > 1)
+                MissionDetailPageManager.UpdateMissionDetailInformation(currentMission, null, MultipleBombsModManager.GetMaximumBombs(), null, page.InitialTime, page.NumModules, page.NumStrikes, numBombs);
         }
     }
 }

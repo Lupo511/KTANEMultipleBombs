@@ -44,14 +44,17 @@ namespace MultipleBombsAssembly
             if (!enabled)
                 return;
 
-            currentMission.GetMissionInfo(out float time, out int modules, out int strikes);
+            if (currentMission.BombCount > 1)
+            {
+                currentMission.GetMissionInfo(out float time, out int modules, out int strikes);
 
-            numBombs.text = currentMission.BombCount + " Bombs";
-            numBombs.gameObject.SetActive(true);
-            page.FreeplayTime.text = string.Format("{0}:{1:00}", (int)time / 60, time % 60);
-            Localization.SetTerm("BombBinder/txtModuleCount", page.FreeplayModules.gameObject);
-            Localization.SetParameter("MODULE_COUNT", modules.ToString(), page.FreeplayModules.gameObject);
-            Localization.SetTerm(strikes == currentMission.BombCount ? "BombBinder/results_HardcoreOn" : "BombBinder/results_HardcoreOff", page.FreeplayHardcore.gameObject); //Assumes always positive strikes
+                numBombs.text = currentMission.BombCount + " Bombs";
+                numBombs.gameObject.SetActive(true);
+                page.FreeplayTime.text = string.Format("{0}:{1:00}", (int)time / 60, time % 60);
+                Localization.SetTerm("BombBinder/txtModuleCount", page.FreeplayModules.gameObject);
+                Localization.SetParameter("MODULE_COUNT", modules.ToString(), page.FreeplayModules.gameObject);
+                Localization.SetTerm(strikes == currentMission.BombCount ? "BombBinder/results_HardcoreOn" : "BombBinder/results_HardcoreOff", page.FreeplayHardcore.gameObject); //Assumes always positive strikes
+            }
         }
     }
 }
