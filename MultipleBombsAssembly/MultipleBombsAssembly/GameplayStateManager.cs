@@ -257,6 +257,13 @@ namespace MultipleBombsAssembly
             paceMakerManager.StartRound();
         }
 
+        public override void ExitState()
+        {
+            BombEvents.OnBombDetonated -= onBombDetonatedEvent;
+            BombComponentEvents.OnComponentPass -= onComponentPassEvent;
+            BombComponentEvents.OnComponentStrike -= onComponentStrikeEvent;
+        }
+
         public Bomb CreateBomb(KMGeneratorSetting generatorSetting, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
         {
             Logger.Log("Creating new bomb");
