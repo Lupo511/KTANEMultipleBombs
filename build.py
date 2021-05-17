@@ -25,20 +25,33 @@ def copydir(dir, dest):
             else:
                 copydir(fullpath, os.path.join(dest, entry.name))
 
-def build(config):
-    print("Building mod...")
-
+def buildAssembly(config):
     print("Building assembly...")
+    
     result = subprocess.run([config["msbuildPath"], "./MultipleBombsAssembly/MultipleBombsAssembly.sln", "/p:Configuration=Release", "/p:KTANEPath=" + config["ktanePath"]])
+    
     if result.returncode != 0:
-        return
+        raise Exception("MSBuild returned with exit code " + str(result.returncode))
+    
     print("Assembly build completed")
+    return 0
 
+def buildBundle(config):
     print("Building mod bundle...")
+    
     result = subprocess.run([config["unityPath"], "-batchmode", "-quit", "-projectPath", os.getcwd() + "/MultipleBombs/", "-executeMethod", "AssetBundler.BuildAllAssetBundles_WithEditorUtility", "-logFile", "-"])
+    
     if result.returncode != 0:
-        return
+        raise Exception("Unity returned with exit code " + str(result.returncode))
+
     print("Mod bundle build completed")
+    return 0
+
+def buildAll(config):
+
+    buildAssembly(config)
+
+    buildBundle(config)
 
     print("Copying to build directory...")
     copydir("./MultipleBombs/build/MultipleBombs", "./Build/MultipleBombs")
@@ -50,13 +63,26 @@ def build(config):
         print("Build copied to debug directory")
 
 def clean():
+    print("Cleaning build...")
     shutil.rmtree("./Build/")
+    print("Build cleaned")
 
 config = None
 with open("./buildconfig.json", "rb") as configFile:
     config = json.load(configFile)
 
-if("clean" in sys.argv):
-    clean()
+print("Building mod...")
+if len(sys.argv) == 1:
+    buildAll(config)
 else:
-    build(config)
+    for target in sys.argv[1:]:
+        if target == "all":
+            buildAll(config)
+        elif target == "assembly":
+            buildAssembly(config)
+        elif target == "bundle":
+            buildBundle(config)
+        elif target == "clean":
+            clean()
+        else:
+            print("Unknown target: " + target)
