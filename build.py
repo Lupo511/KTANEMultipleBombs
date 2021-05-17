@@ -3,8 +3,9 @@
 #Sample config:
 #{
 #    "msbuildPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe",
-#    "unityPath": "C:/Program Files/Unity_KTaNE/Editor/Unity.exe",
-#    "debugModsDirectory": "C:/Program Files (x86)/Steam/steamapps/common/Keep Talking and Nobody Explodes/mods"
+#    "unityPath": "C:/Program Files/Unity/Editor/Unity.exe",
+#    "ktanePath": "C:/Program Files (x86)/Steam/steamapps/common/Keep Talking and Nobody Explodes/",
+#    "copyToModsFolder": true
 #}
 #"debugModsDirectory" is optional
 
@@ -28,7 +29,7 @@ def build(config):
     print("Building mod...")
 
     print("Building assembly...")
-    result = subprocess.run([config["msbuildPath"], "./MultipleBombsAssembly/MultipleBombsAssembly.sln", "/p:Configuration=Release"])
+    result = subprocess.run([config["msbuildPath"], "./MultipleBombsAssembly/MultipleBombsAssembly.sln", "/p:Configuration=Release", "/p:KTANEPath=" + config["ktanePath"]])
     if result.returncode != 0:
         return
     print("Assembly build completed")
@@ -41,9 +42,9 @@ def build(config):
     copydir("./MultipleBombs/build/MultipleBombs", "./Build/MultipleBombs")
     print("Build completed")
 
-    if("debugModsDirectory" in config):
+    if("copyToModsFolder" in config and config["copyToModsFolder"] == True):
         print("Copying build to debug directory...")
-        copydir("./Build/MultipleBombs", config["debugModsDirectory"] + "/MultipleBombs")
+        copydir("./Build/MultipleBombs", config["ktanePath"] + "/mods/MultipleBombs")
         print("Build copied to debug directory")
 
 def clean():
