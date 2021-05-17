@@ -36,6 +36,8 @@ def build(config):
 
     print("Building mod bundle...")
     result = subprocess.run([config["unityPath"], "-batchmode", "-quit", "-projectPath", os.getcwd() + "/MultipleBombs/", "-executeMethod", "AssetBundler.BuildAllAssetBundles_WithEditorUtility", "-logFile", "-"])
+    if result.returncode != 0:
+        return
     print("Mod bundle build completed")
 
     print("Copying to build directory...")
