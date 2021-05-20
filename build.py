@@ -33,8 +33,8 @@ def buildAssembly(config):
     if result.returncode != 0:
         raise Exception("MSBuild returned with exit code " + str(result.returncode))
     
-    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./Build/MultipleBombs")
-    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./MultipleBombs/Assets/Plugins/Managed")
+    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./Build/MultipleBombs/MultipleBombsAssembly.dll")
+    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./MultipleBombs/Assets/Plugins/Managed/MultipleBombsAssembly.dll")
     
     print("Assembly build completed")
     return 0
