@@ -11,17 +11,19 @@ namespace MultipleBombsAssembly.Resources
 {
     public class ResourceManager
     {
+        private ModHelper modHelper;
         private CultureInfo cultureInfo;
         private ResourceCollection resourceCollection;
 
-        public ResourceManager(CultureInfo cultureInfo)
+        public ResourceManager(ModHelper modHelper, CultureInfo cultureInfo)
         {
             this.cultureInfo = cultureInfo;
+            this.modHelper = modHelper;
         }
 
         public void LoadResources()
         {
-            using (FileStream fileStream = File.OpenRead(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Resources.bin"))
+            using (FileStream fileStream = File.OpenRead(modHelper.Mod.GetModPath() + "/Resources.bin"))
             {
                 resourceCollection = new ResourceReader(fileStream).ReadResources(cultureInfo);
             }
