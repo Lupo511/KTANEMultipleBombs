@@ -33,6 +33,9 @@ def buildAssembly(config):
     if result.returncode != 0:
         raise Exception("MSBuild returned with exit code " + str(result.returncode))
     
+    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./Build/MultipleBombs")
+    shutil.copy("./MultipleBombsAssembly/MultipleBombsAssembly/bin/Release/MultipleBombsAssembly.dll", "./MultipleBombs/Assets/Plugins/Managed")
+    
     print("Assembly build completed")
     return 0
 
@@ -43,6 +46,8 @@ def buildBundle(config):
     
     if result.returncode != 0:
         raise Exception("Unity returned with exit code " + str(result.returncode))
+    
+    copydir("./MultipleBombs/build/MultipleBombs", "./Build/MultipleBombs")
 
     print("Mod bundle build completed")
     return 0
@@ -57,10 +62,6 @@ def buildAll(config):
     buildAssembly(config)
 
     buildBundle(config)
-
-    print("Copying to build directory...")
-    copydir("./MultipleBombs/build/MultipleBombs", "./Build/MultipleBombs")
-    print("Build completed")
 
     if("copyToModsFolder" in config and config["copyToModsFolder"] == True):
         copy(config["ktanePath"])
