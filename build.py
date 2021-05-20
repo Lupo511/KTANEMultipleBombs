@@ -76,7 +76,7 @@ with open("./buildconfig.json", "rb") as configFile:
     config = json.load(configFile)
 
 print("Building mod...")
-os.makedirs("./Build", exist_ok=True)
+os.makedirs("./Build/MultipleBombs", exist_ok=True)
 if len(sys.argv) == 1:
     buildAll(config)
 else:
