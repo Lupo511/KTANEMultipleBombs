@@ -6,7 +6,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <OutputPath>..\..\MultipleBombs\Assets\Plugins\Managed\</OutputPath>
+    <OutputPath></OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
