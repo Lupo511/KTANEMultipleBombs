@@ -18,5 +18,10 @@ namespace MultipleBombsAssembly.Internationalization
         {
             strings = new string[6] { zero, one, two, few, many, other };
         }
+
+        public string GetString(PluralQuantity quantity)
+        {
+            return strings[(int)quantity];
+        }
     }
 }
