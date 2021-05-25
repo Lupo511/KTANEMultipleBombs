@@ -14,6 +14,7 @@ import json
 import os
 import shutil
 import subprocess
+import Resources
 
 def copydir(dir, dest):
     os.makedirs(dest, exist_ok=True)
@@ -24,6 +25,21 @@ def copydir(dir, dest):
                 shutil.copy(fullpath, dest)
             else:
                 copydir(fullpath, os.path.join(dest, entry.name))
+
+def buildResources():
+    print("Building resources...")
+
+    resourceCompiler = Resources.ResourceCompiler()
+
+    with os.scandir("./Resources") as resourceFiles:
+        for resourceFile in resourceFiles:
+            if resourceFile.is_file():
+                if resourceFile.name.endswith(".xml") and resourceFile.name.startswith("Resources."):
+                    resourceCompiler.readXmlFile(resourceFile.path)
+
+    resourceCompiler.writeCompiledBytes(open("./Build/MultipleBombs/Resources.bin", "wb"))
+    
+    print("Resources build completed")
 
 def buildAssembly(config):
     print("Building assembly...")
@@ -59,6 +75,8 @@ def copy(ktanePath):
 
 def buildAll(config):
 
+    buildResources()
+
     buildAssembly(config)
 
     buildBundle(config)
@@ -83,6 +101,8 @@ else:
     for target in sys.argv[1:]:
         if target == "all":
             buildAll(config)
+        elif target == "resources":
+            buildResources()
         elif target == "assembly":
             buildAssembly(config)
         elif target == "bundle":
