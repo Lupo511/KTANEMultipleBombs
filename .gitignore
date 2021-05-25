@@ -1,2 +1,4 @@
 /buildconfig.json
 /[Bb]uild/
+
+/__pycache__/
