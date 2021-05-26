@@ -12,14 +12,14 @@ namespace MultipleBombsAssembly.Resources
     public class ResourceManager
     {
         private ModHelper modHelper;
-        private CultureInfo cultureInfo;
+        public CultureInfo CurrentCulture { get; private set; }
         private ResourceCollection resourceCollection;
         private IPluralRule pluralRule;
 
         public ResourceManager(ModHelper modHelper, CultureInfo cultureInfo)
         {
             this.modHelper = modHelper;
-            this.cultureInfo = cultureInfo;
+            this.CurrentCulture = cultureInfo;
             pluralRule = PluralRuleProvider.GetPluralRuleFromLanguage(cultureInfo.TwoLetterISOLanguageName);
         }
 
@@ -27,8 +27,14 @@ namespace MultipleBombsAssembly.Resources
         {
             using (FileStream fileStream = File.OpenRead(modHelper.Mod.GetModPath() + "/Resources.bin"))
             {
-                resourceCollection = new ResourceReader(fileStream).ReadResources(cultureInfo);
+                resourceCollection = new ResourceReader(fileStream).ReadResources(CurrentCulture);
             }
+        }
+
+        public void LoadNewCulture(CultureInfo newCultureInfo)
+        {
+            CurrentCulture = newCultureInfo;
+            LoadResources();
         }
 
         public string GetString(string resourceId)
@@ -64,6 +70,14 @@ namespace MultipleBombsAssembly.Resources
             catch (KeyNotFoundException)
             {
                 throw new KeyNotFoundException();
+            }
+        }
+
+        public bool ResourcesLoaded
+        {
+            get
+            {
+                return resourceCollection != null;
             }
         }
     }

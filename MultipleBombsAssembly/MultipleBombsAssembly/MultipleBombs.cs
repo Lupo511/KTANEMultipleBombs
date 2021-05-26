@@ -20,6 +20,7 @@ namespace MultipleBombsAssembly
     public class MultipleBombs : MonoBehaviour
     {
         public GameManager gameManager;
+        private Resources.ResourceManager resourceManager;
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
         public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
         private KMGameInfo gameInfo;
@@ -35,7 +36,8 @@ namespace MultipleBombsAssembly
             gameInfo = GetComponent<KMGameInfo>();
             gameCommands = GetComponent<KMGameCommands>();
 
-            gameManager = new GameManager(this, gameInfo, gameCommands);
+            resourceManager = new Resources.ResourceManager(new ModHelper("MultipleBombs"), I2.Loc.LocalizationManager.CurrentCulture);
+            gameManager = new GameManager(this, gameInfo, gameCommands, resourceManager);
 
             LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
 
