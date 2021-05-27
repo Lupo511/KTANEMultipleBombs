@@ -38,10 +38,10 @@ namespace MultipleBombsAssembly
                     else if (!resourceManager.ResourcesLoaded)
                         resourceManager.LoadResources();
 
-                    CurrentState = new SetupStateManager(multipleBombs, SceneManager.Instance.SetupState);
+                    CurrentState = new SetupStateManager(resourceManager, multipleBombs, SceneManager.Instance.SetupState);
                     break;
                 case KMGameInfo.State.Gameplay:
-                    CurrentState = new GameplayStateManager(multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
+                    CurrentState = new GameplayStateManager(resourceManager, multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
                     break;
             }
 

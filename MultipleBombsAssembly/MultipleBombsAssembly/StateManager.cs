@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultipleBombsAssembly.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,15 @@ namespace MultipleBombsAssembly
         private Queue<Action> lateUpdatePostedDelegates;
         private Queue<StateCoroutine> newCoroutines;
         private List<StateCoroutine> coroutines;
+        public ResourceManager ResourceManager { get; }
 
-        public StateManager()
+        public StateManager(ResourceManager resourceManager)
         {
             startPostedDelegates = new Queue<Action>();
             lateUpdatePostedDelegates = new Queue<Action>();
             newCoroutines = new Queue<StateCoroutine>();
             coroutines = new List<StateCoroutine>();
+            ResourceManager = resourceManager;
         }
 
         public virtual void EnterState() { }

@@ -14,7 +14,7 @@ namespace MultipleBombsAssembly
         private MultipleBombs multipleBombs;
         private SetupState setupState;
 
-        public SetupStateManager(MultipleBombs multipleBombs, SetupState setupState)
+        public SetupStateManager(Resources.ResourceManager resourceManager, MultipleBombs multipleBombs, SetupState setupState) : base(resourceManager)
         {
             this.multipleBombs = multipleBombs;
             this.setupState = setupState;

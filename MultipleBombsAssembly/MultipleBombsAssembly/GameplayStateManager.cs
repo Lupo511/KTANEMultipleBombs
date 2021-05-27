@@ -2,6 +2,7 @@
 using Assets.Scripts.Pacing;
 using Assets.Scripts.Records;
 using Events;
+using MultipleBombsAssembly.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace MultipleBombsAssembly
             gameplayStateLightBulbField = typeof(GameplayState).GetField("lightBulb", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        public GameplayStateManager(MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands)
+        public GameplayStateManager(ResourceManager resourceManager, MultipleBombs multipleBombs, GameplayState gameplayState, KMGameCommands gameCommands) : base(resourceManager)
         {
             this.multipleBombs = multipleBombs;
             this.gameplayState = gameplayState;
