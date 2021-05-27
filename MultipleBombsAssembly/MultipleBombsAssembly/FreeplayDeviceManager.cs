@@ -1,4 +1,4 @@
-﻿using I2.Loc;
+﻿using MultipleBombsAssembly.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,16 +13,18 @@ namespace MultipleBombsAssembly
     {
         private MultipleBombs multipleBombs;
         private SetupStateManager setupStateManager;
+        private ResourceManager resourceManager;
         private MultipleBombsFreeplaySettings freeplaySettings;
         private TextMeshPro bombsValue;
         private int maxBombs;
         private static float? vanillaMaxSecondsToSolve;
         private int maxModBombModules;
 
-        public void Initialize(MultipleBombs multipleBombs, SetupStateManager setupStateManager)
+        public void Initialize(MultipleBombs multipleBombs, SetupStateManager setupStateManager, ResourceManager resourceManager)
         {
             this.multipleBombs = multipleBombs;
             this.setupStateManager = setupStateManager;
+            this.resourceManager = resourceManager;
 
             //To-do: only load last setting according to the demo settings
             freeplaySettings = multipleBombs.LastFreeplaySettings;
@@ -49,8 +51,8 @@ namespace MultipleBombsAssembly
 
             TextMeshPro bombsLabel = bombsObject.transform.Find("ModuleCountLabel").GetComponent<TextMeshPro>();
             bombsLabel.gameObject.name = "BombCountLabel";
-            Destroy(bombsLabel.GetComponent<Localize>());
-            bombsLabel.text = "Bombs";
+            Destroy(bombsLabel.GetComponent<I2.Loc.Localize>());
+            bombsLabel.text = resourceManager.GetString("FreePlay_BombsLabel");
 
             bombsValue = bombsObject.transform.Find("ModuleCountValue").GetComponent<TextMeshPro>();
             bombsValue.gameObject.name = "BombCountValue";
@@ -123,13 +125,13 @@ namespace MultipleBombsAssembly
             {
                 freeplayDevice.Screen.CurrentState = FreeplayScreen.State.Start;
                 bombsLed.SetState(true);
-                freeplayDevice.Screen.ScreenText.text = "BOMBS:\n\nNumber of bombs\nto defuse\n\n<size=20><#00ff00>Multiple Bombs Mod</color></size>";
+                freeplayDevice.Screen.ScreenText.text = resourceManager.GetString("FreePlay_BombsScreenText");
             });
             decrementButtonSelectable.OnHighlight = new Action(() =>
             {
                 freeplayDevice.Screen.CurrentState = FreeplayScreen.State.Start;
                 bombsLed.SetState(true);
-                freeplayDevice.Screen.ScreenText.text = "BOMBS:\n\nNumber of bombs\nto defuse\n\n<size=20><#00ff00>Multiple Bombs Mod</color></size>";
+                freeplayDevice.Screen.ScreenText.text = resourceManager.GetString("FreePlay_BombsScreenText");
             });
 
             //Add action to disable the bombs led on the other buttons OnHighlight
@@ -155,7 +157,7 @@ namespace MultipleBombsAssembly
             Action setCustomModulesText = new Action(() =>
             {
                 freeplayDevice.Screen.CurrentState = FreeplayScreen.State.Modules;
-                freeplayDevice.Screen.ScreenText.text = "MODULES:\n\nNumber of modules\nper bomb";
+                freeplayDevice.Screen.ScreenText.text = resourceManager.GetString("FreePlay_ModulesScreenText");
             });
             DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountDecrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);
             DelegateUtils.ReplaceFromTarget(ref freeplayDevice.ModuleCountIncrement.GetComponent<Selectable>().OnHighlight, freeplayDevice, setCustomModulesText);

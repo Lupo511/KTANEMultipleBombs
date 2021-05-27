@@ -1,5 +1,5 @@
 ﻿using Assets.Scripts.Missions;
-using I2.Loc;
+using MultipleBombsAssembly.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace MultipleBombsAssembly
         private static FieldInfo currentMissionField;
         private static FieldInfo canStartField;
         private SetupStateManager setupStateManager;
+        private ResourceManager resourceManager;
         private TournamentDetailPage page;
         private TextMeshPro textBombs;
 
@@ -25,16 +26,17 @@ namespace MultipleBombsAssembly
             canStartField = typeof(MissionDetailPage).GetField("canStartMission", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
-        public void Initialize(SetupStateManager setupStateManager)
+        public void Initialize(SetupStateManager setupStateManager, ResourceManager resourceManager)
         {
             this.setupStateManager = setupStateManager;
+            this.resourceManager = resourceManager;
 
             page = GetComponent<TournamentDetailPage>();
 
             //Add the mission bomb count label by cloning and modifying the strikes label
             textBombs = Instantiate(page.TextStrikes, page.TextStrikes.transform.position, page.TextStrikes.transform.rotation, page.TextStrikes.transform.parent);
             textBombs.gameObject.SetActive(false);
-            Destroy(textBombs.GetComponent<Localize>());
+            Destroy(textBombs.GetComponent<I2.Loc.Localize>());
             textBombs.transform.localPosition += new Vector3(0, 0.012f, 0);
             textBombs.text = "X Bombs";
         }
@@ -62,7 +64,7 @@ namespace MultipleBombsAssembly
 
             //Read the mission and update the page data
             Mission currentMission = (Mission)currentMissionField.GetValue(page);
-            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), currentMission.DescriptionTerm, MultipleBombsModManager.GetMaximumBombs(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
+            bool canStart = MissionDetailPageManager.UpdateMissionDetailInformation(MultipleBombsMissionDetails.ReadMission(currentMission), resourceManager, currentMission.DescriptionTerm, MultipleBombsModManager.GetMaximumBombs(), page.TextDescription, page.TextTime, page.TextModuleCount, page.TextStrikes, textBombs);
             canStartField.SetValue(page, canStart);
         }
     }

@@ -1,4 +1,4 @@
-﻿using I2.Loc;
+﻿using MultipleBombsAssembly.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +11,21 @@ namespace MultipleBombsAssembly
     public class ResultFreeplayPageManager : MonoBehaviour
     {
         private GameplayStateManager gameplayStateManager;
+        private ResourceManager resourceManager;
         private MultipleBombsMissionDetails currentMission;
         private ResultFreeplayPage page;
         private TextMeshPro numBombs;
 
-        public void Initialize(GameplayStateManager gameplayStateManager, MultipleBombsMissionDetails currentMission)
+        public void Initialize(GameplayStateManager gameplayStateManager, ResourceManager resourceManager, MultipleBombsMissionDetails currentMission)
         {
             this.gameplayStateManager = gameplayStateManager;
+            this.resourceManager = resourceManager;
             this.currentMission = currentMission;
 
             page = GetComponent<ResultFreeplayPage>();
             numBombs = Instantiate(page.FreeplayModules, page.FreeplayModules.transform.position, page.FreeplayModules.transform.rotation, page.FreeplayModules.transform.parent);
             numBombs.gameObject.SetActive(false);
-            Destroy(numBombs.GetComponent<Localize>());
+            Destroy(numBombs.GetComponent<I2.Loc.Localize>());
             numBombs.transform.localPosition += new Vector3(0, 0.012f, 0);
             numBombs.text = "X Bombs";
         }
@@ -48,7 +50,7 @@ namespace MultipleBombsAssembly
             {
                 currentMission.GetMissionInfo(out float time, out int modules, out int strikes);
 
-                numBombs.text = currentMission.BombCount + " Bombs";
+                numBombs.text = string.Format(resourceManager.GetPluralStringValue("BombBinder_TextBombs", currentMission.BombCount), currentMission.BombCount);
                 numBombs.gameObject.SetActive(true);
                 page.FreeplayTime.text = string.Format("{0}:{1:00}", (int)time / 60, time % 60);
                 Localization.SetTerm("BombBinder/txtModuleCount", page.FreeplayModules.gameObject);
