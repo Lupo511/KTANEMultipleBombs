@@ -1,0 +1,13 @@
+{
+    "FreePlay_BombsLabel": "Bombs",
+    "FreePlay_BombsScreenText": "BOMBS:\n\nNumber of bombs\nto defuse\n\n<size=20><#00ff00>Multiple Bombs Mod</color></size>",
+    "FreePlay_ModulesScreenText": "MODULES:\n\nNumber of modules\nper bomb",
+    "BombBinder_TextBombs": {
+        "one": "{0} Bomb",
+        "other": "{0} Bombs"
+    },
+    "BombBinder_NeedABiggerRoom": {
+        "one": "A room that can support more bombs is required.\n\nCurrent rooms only support up to {0} bomb.",
+        "other": "A room that can support more bombs is required.\n\nCurrent rooms only support up to {0} bombs."
+    }
+}

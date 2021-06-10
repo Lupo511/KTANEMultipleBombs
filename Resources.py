@@ -1,8 +1,9 @@
 from io import BufferedWriter
 from typing import Dict
+import json
 from xml.etree import ElementTree
 
-quantityValues = [ "Zero", "One", "Two", "Few", "Many", "Other" ]
+quantityValues = [ "zero", "one", "two", "few", "many", "other" ]
 
 class ResourceCollection:
     def __init__(self) -> None:
@@ -16,6 +17,40 @@ class PluralString:
 class ResourceCompiler:
     def __init__(self) -> None:
         self.resourceCollections = {}
+    
+    def readJson(self, languageCode: str, regionCode: str, jsonObject) -> None:
+        localeCode = "default"
+        if(languageCode != None):
+            localeCode = languageCode
+            if regionCode != None:
+                localeCode += regionCode
+        
+        if localeCode in self.resourceCollections:
+            resourceCollection = self.resourceCollections[localeCode]
+        else:
+            resourceCollection = ResourceCollection()
+            self.resourceCollections[localeCode] = resourceCollection
+
+        for resourceId, content in jsonObject.items():
+            if isinstance(content, str):
+                resourceCollection.strings[resourceId] = content
+            else:
+                pluralString = PluralString()
+
+                for quantity, value in content.items():
+                    try:
+                        quantityIndex = quantityValues.index(quantity)
+                    except ValueError:
+                        raise Exception("Unknown quantity: " + quantity)
+                    
+                    pluralString.strings[quantityIndex] = value
+                
+                resourceCollection.pluralStrings[resourceId] = pluralString
+
+    
+    def readJsonFile(self, languageCode: str, regionCode: str, path: str) -> None:
+        with open(path, encoding="utf-8") as jsonFile:
+            self.readJson(languageCode, regionCode, json.load(jsonFile))
 
     def readXml(self, elementTree: ElementTree.ElementTree) -> None:
         resourceFileElement = elementTree.getroot()
@@ -57,7 +92,7 @@ class ResourceCompiler:
                             raise Exception("PluralString Value must have a quantity.")
                         
                         try:
-                            quantityIndex = quantityValues.index(valueElement.attrib["Quantity"])
+                            quantityIndex = quantityValues.index(valueElement.attrib["Quantity"].lower())
                         except ValueError:
                             raise Exception("Unknown quantity: " + valueElement.attrib["Quantity"])
                         

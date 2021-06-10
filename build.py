@@ -34,8 +34,15 @@ def buildResources():
     with os.scandir("./Resources") as resourceFiles:
         for resourceFile in resourceFiles:
             if resourceFile.is_file():
-                if resourceFile.name.endswith(".xml") and resourceFile.name.startswith("Resources."):
-                    resourceCompiler.readXmlFile(resourceFile.path)
+                if resourceFile.name.endswith(".json") and resourceFile.name.startswith("Resources."):
+                    languageCode = None
+                    regionCode = None
+                    if len(resourceFile.name) != 14:
+                        languageCode = resourceFile.name[10:12]
+                        if len(resourceFile.name) == 20:
+                            regionCode = resourceFile.name[13:15]
+                    
+                    resourceCompiler.readJsonFile(languageCode, regionCode, resourceFile.path)
 
     resourceCompiler.writeCompiledBytes(open("./Build/MultipleBombs/Resources.bin", "wb"))
     
