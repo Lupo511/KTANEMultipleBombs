@@ -16,10 +16,10 @@ MonoBehaviour:
   author: Lupo511
   description: "What's better than a bomb? Two bombs! Take your multitasking skills
     to a new level by defusing two independent bombs at the same time! Two separate
-    serials, two separate widget collections, two separate timers, and more!\r\nYou
-    can easily change the mod settings from an option in the Free Play menu.\r\nAlso,
+    serials, two separate widget collections, two separate timers, and more!\nYou
+    can easily change the mod settings from an option in the Free Play menu.\nAlso,
     it can work together with custom bomb casings and custom gameplay rooms, so that
-    you can have total control over customization!\r\n\r\n[h1]For mod developers[/h1]\r\nThe
+    you can have total control over customization!\n\n[h1]For mod developers[/h1]\nThe
     mod exposes various APIs that other mod developers can use. For example it allows
     to customize bomb spanws in a Gameplay Room, to build missions with multiple bombs
     and much more!\nTo learn how to use it and for explanation about all of its features
