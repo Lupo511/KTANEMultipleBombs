@@ -23,7 +23,8 @@ MonoBehaviour:
     mod exposes various APIs that other mod developers can use. For example it allows
     to customize bomb spanws in a Gameplay Room, to build missions with multiple bombs
     and much more!\nTo learn how to use it and for explanation about all of its features
-    read the API Docs at [url=https://lupo511.github.io/ktanemods/MultipleBombs/docs/]https://lupo511.github.io/ktanemods/MultipleBombs/docs/[/url]."
+    read the API Docs at [url=https://lupo511.github.io/ktanemods/MultipleBombs/docs/]https://lupo511.github.io/ktanemods/MultipleBombs/docs/[/url].\n\n[h1]Credits[/h1]\nFor
+    a list of people that contributed to the mod, see the full credits at [url=https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html]https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html[/url]."
   version: 1.5.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: be95b037aca480441806d4efa6da4ce2, type: 3}
