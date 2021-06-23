@@ -39,7 +39,6 @@ namespace MultipleBombsAssembly
             gameplayMusicController.enabled = true;
         }
 
-        //To-do: check transitions when going backwards
         public void Update()
         {
             //Sets the current song index and plays the stinger considering the timer of all of the bombs
@@ -102,7 +101,10 @@ namespace MultipleBombsAssembly
                     {
                         currentSongIndex = newSongIndex;
                         playlistController.ClearQueue();
-                        playlistController.QueuePlaylistClip(playlistController.CurrentPlaylist.MusicSettings[currentSongIndex].songName, true);
+                        if (newSongIndex > currentSongIndex)
+                            playlistController.QueuePlaylistClip(playlistController.CurrentPlaylist.MusicSettings[currentSongIndex].songName, true);
+                        else
+                            playlistController.PlaySong(playlistController.CurrentPlaylist.MusicSettings[currentSongIndex], PlaylistController.AudioPlayType.PlayNow);
                     }
                 }
             }
