@@ -1,0 +1,13 @@
+{
+    "FreePlay_BombsLabel": "Bombe",
+    "FreePlay_BombsScreenText": "BOMBE:\n\nNumero di bombe\nda disinnescare",
+    "FreePlay_ModulesScreenText": "MODULI:\n\nNumero di moduli\nper bomba",
+    "BombBinder_TextBombs": {
+        "one": "{0} Bomba",
+        "other": "{0} Bombe"
+    },
+    "BombBinder_NeedABiggerRoom": {
+        "one": "È richiesta una stanza che possa supportare più bombe.\n\nLe stanze attuali supportano fino a {0} bomba.",
+        "other": "È richiesta una stanza che possa supportare più bombe.\n\nLe stanze attuali supportano fino a {0} bombe."
+    }
+}
