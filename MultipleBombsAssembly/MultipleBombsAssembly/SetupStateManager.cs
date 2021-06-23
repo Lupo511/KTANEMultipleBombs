@@ -20,7 +20,7 @@ namespace MultipleBombsAssembly
             this.setupState = setupState;
         }
 
-        public override void EnterState()
+        public override void Create()
         {
             Logger.Log("Setting up setup state");
 

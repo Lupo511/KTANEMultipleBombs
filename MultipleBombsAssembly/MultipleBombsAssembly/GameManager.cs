@@ -11,6 +11,9 @@ namespace MultipleBombsAssembly
         private MultipleBombs multipleBombs;
         private KMGameCommands kmGameCommands;
         private ResourceManager resourceManager;
+        private SceneManager currentSceneManager;
+        private SetupStateManager setupStateManager;
+        private GameplayStateManager gameplayStateManager;
         public StateManager CurrentState { get; set; }
 
         public GameManager(MultipleBombs multipleBombs, KMGameInfo kmGameInfo, KMGameCommands kmGameCommands, ResourceManager resourceManager)
@@ -18,6 +21,8 @@ namespace MultipleBombsAssembly
             this.multipleBombs = multipleBombs;
             this.kmGameCommands = kmGameCommands;
             this.resourceManager = resourceManager;
+
+            currentSceneManager = SceneManager.Instance;
 
             kmGameInfo.OnStateChange += onStateChange;
         }
@@ -30,6 +35,13 @@ namespace MultipleBombsAssembly
                 CurrentState = null;
             }
 
+            if (SceneManager.Instance != currentSceneManager) //States have been recreated, thus we set our state managers to be recreated as well
+            {
+                currentSceneManager = SceneManager.Instance;
+                setupStateManager = null;
+                gameplayStateManager = null;
+            }
+
             switch (state)
             {
                 case KMGameInfo.State.Setup:
@@ -38,10 +50,20 @@ namespace MultipleBombsAssembly
                     else if (!resourceManager.ResourcesLoaded)
                         resourceManager.LoadResources();
 
-                    CurrentState = new SetupStateManager(resourceManager, multipleBombs, SceneManager.Instance.SetupState);
+                    if (setupStateManager == null)
+                    {
+                        setupStateManager = new SetupStateManager(resourceManager, multipleBombs, SceneManager.Instance.SetupState);
+                        setupStateManager.Create();
+                    }
+                    CurrentState = setupStateManager;
                     break;
                 case KMGameInfo.State.Gameplay:
-                    CurrentState = new GameplayStateManager(resourceManager, multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
+                    if (gameplayStateManager == null)
+                    {
+                        gameplayStateManager = new GameplayStateManager(resourceManager, multipleBombs, SceneManager.Instance.GameplayState, kmGameCommands);
+                        gameplayStateManager.Create();
+                    }
+                    CurrentState = gameplayStateManager;
                     break;
             }
 

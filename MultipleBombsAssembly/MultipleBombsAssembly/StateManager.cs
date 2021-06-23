@@ -24,6 +24,8 @@ namespace MultipleBombsAssembly
             ResourceManager = resourceManager;
         }
 
+        public virtual void Create() { }
+
         public virtual void EnterState() { }
 
         public virtual void Update() { }
