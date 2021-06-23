@@ -1,4 +1,5 @@
-﻿using MultipleBombsAssembly.Resources;
+﻿using Assets.Scripts;
+using MultipleBombsAssembly.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,8 +27,10 @@ namespace MultipleBombsAssembly
             this.setupStateManager = setupStateManager;
             this.resourceManager = resourceManager;
 
-            //To-do: only load last setting according to the demo settings
-            freeplaySettings = multipleBombs.LastFreeplaySettings;
+            if (DemoManager.Instance.Settings != null && !DemoManager.Instance.Settings.ForgetLastGameSettings)
+                freeplaySettings = multipleBombs.LastFreeplaySettings;
+            else
+                freeplaySettings = new MultipleBombsFreeplaySettings(1);
         }
 
         public void Start()
