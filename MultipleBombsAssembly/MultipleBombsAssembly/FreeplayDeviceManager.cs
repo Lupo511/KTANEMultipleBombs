@@ -200,7 +200,17 @@ namespace MultipleBombsAssembly
 
         public void Update()
         {
+            UpdateMaxBombs();
+        }
+
+        private void UpdateMaxBombs()
+        {
             //Check max bomb count limit
+            if (GameplayState.GameplayRoomPrefabOverride != null) //Note: the game behaviour in regards to maximum modules is to take the max of the override and other available bombs, but this hasn't been mimicked in the room picking because it could allow cheating by starting the overridden room with a larger bomb count than supported
+                maxBombs = MultipleBombsModManager.GetRoomSupportedBombCount(GameplayState.GameplayRoomPrefabOverride.GetComponent<GameplayRoom>());
+            else
+                maxBombs = MultipleBombsModManager.GetMaximumBombs();
+
             if (freeplaySettings.BombCount > maxBombs)
             {
                 freeplaySettings.BombCount = maxBombs;
