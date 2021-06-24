@@ -27,7 +27,7 @@ namespace MultipleBombsAssembly
             this.resourceManager = resourceManager;
 
             if (DemoManager.Instance.Settings != null && !DemoManager.Instance.Settings.ForgetLastGameSettings)
-                freeplaySettings = multipleBombs.LastFreeplaySettings;
+                freeplaySettings = multipleBombs.LastFreeplaySettings; //Note: the game doesn't clone the vanilla setting so edits to the settings will aplly to the recorded last freeplay settings, thus persisting through game resets (currently assumed to be a bug and thus not replicated with bombs setting)
             else
                 freeplaySettings = new MultipleBombsFreeplaySettings(1);
         }
@@ -195,7 +195,15 @@ namespace MultipleBombsAssembly
                 Logger.Log("Freeplay events patched");
             });
 
+            //Subscribe to the start event to save freeplay settings
+            freeplayDevice.StartButton.OnPush += StartButton_OnPush;
+
             Logger.Log("Freeplay option added");
+        }
+
+        private void StartButton_OnPush()
+        {
+            multipleBombs.LastFreeplaySettings = freeplaySettings;
         }
 
         public void Update()
@@ -216,11 +224,6 @@ namespace MultipleBombsAssembly
                 freeplaySettings.BombCount = maxBombs;
                 bombsValue.text = freeplaySettings.BombCount.ToString();
             }
-        }
-
-        public void OnDestroy()
-        {
-            multipleBombs.LastFreeplaySettings = freeplaySettings;
         }
 
         private void updateFreeplayDeviceDifficulty(FreeplayDevice device)
