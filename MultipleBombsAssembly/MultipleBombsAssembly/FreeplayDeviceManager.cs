@@ -186,7 +186,10 @@ namespace MultipleBombsAssembly
         {
             //Check max bomb count limit
             if (freeplaySettings.BombCount > maxBombs)
+            {
                 freeplaySettings.BombCount = maxBombs;
+                bombsValue.text = freeplaySettings.BombCount.ToString();
+            }
 
             //To-do: should this be in update? And isn't it better to patch the increase time button push?
             //Update Freeplay max time
