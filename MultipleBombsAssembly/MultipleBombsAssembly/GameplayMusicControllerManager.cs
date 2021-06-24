@@ -99,12 +99,12 @@ namespace MultipleBombsAssembly
                     }
                     if (newSongIndex != currentSongIndex)
                     {
-                        currentSongIndex = newSongIndex;
                         playlistController.ClearQueue();
                         if (newSongIndex > currentSongIndex)
-                            playlistController.QueuePlaylistClip(playlistController.CurrentPlaylist.MusicSettings[currentSongIndex].songName, true);
+                            playlistController.QueuePlaylistClip(playlistController.CurrentPlaylist.MusicSettings[newSongIndex].songName, true);
                         else
-                            playlistController.PlaySong(playlistController.CurrentPlaylist.MusicSettings[currentSongIndex], PlaylistController.AudioPlayType.PlayNow);
+                            playlistController.PlaySong(playlistController.CurrentPlaylist.MusicSettings[newSongIndex], PlaylistController.AudioPlayType.PlayNow);
+                        currentSongIndex = newSongIndex;
                     }
                 }
             }
