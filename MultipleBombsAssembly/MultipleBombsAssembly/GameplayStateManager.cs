@@ -70,33 +70,36 @@ namespace MultipleBombsAssembly
             {
                 Logger.Log("Initializing room");
                 List<GameplayRoom> rooms = new List<GameplayRoom>();
-                if (currentMission.BombCount <= 2) //To-do: match game behaviour and only pick default room if no valid mod rooms are available?
-                    rooms.Add(gameplayState.GameplayRoomPool.Default.GetComponent<GameplayRoom>());
                 foreach (GameObject gameplayRoomObject in gameplayState.GameplayRoomPool.Objects)
                 {
                     GameplayRoom gameplayRoom = gameplayRoomObject.GetComponent<GameplayRoom>();
                     if (currentMission.BombCount <= MultipleBombsModManager.GetRoomSupportedBombCount(gameplayRoom))
                         rooms.Add(gameplayRoom);
                 }
-                if (rooms.Count == 0) //To-do: match game behaviour and use default room with less bombs if no room is available?
+                if (rooms.Count == 0)
                 {
-                    Logger.Log("No room found that supports " + currentMission.BombCount + " bombs");
-                    SceneManager.Instance.ReturnToSetupState();
-                    return;
+                    if (currentMission.BombCount <= 2)
+                    {
+                        rooms.Add(gameplayState.GameplayRoomPool.Default.GetComponent<GameplayRoom>());
+                    }
+                    else  //Note: the game behaviour regarding bomb picking when there isn't a big enough bomb is to just pick the default bomb and ingore modules that don't fit (the assumption is probably that under normal conditions you shouldn't be able to start a mission if you don't have a big enough bomb installed), the room picking behaviour is supposed to mimic bomb picking but I've decided not to allow starting a room that doesn't support the required bomb count to avoid potential cheating
+                    {
+                        Logger.Log("No room found that supports " + currentMission.BombCount + " bombs");
+                        SceneManager.Instance.ReturnToSetupState();
+                        return;
+                    }
                 }
-                else
-                {
-                    GameplayRoom roomPrefab = rooms[UnityEngine.Random.Range(0, rooms.Count)];
-                    UnityEngine.Object.Destroy((GameObject)gameplayStateRoomGOField.GetValue(SceneManager.Instance.GameplayState));
-                    GameObject room = UnityEngine.Object.Instantiate(roomPrefab.gameObject, Vector3.zero, Quaternion.identity);
-                    room.transform.parent = SceneManager.Instance.GameplayState.transform;
-                    room.transform.localScale = Vector3.one;
-                    gameplayStateRoomGOField.SetValue(SceneManager.Instance.GameplayState, room);
-                    gameplayStateLightBulbField.SetValue(SceneManager.Instance.GameplayState, GameObject.Find("LightBulb"));
-                    room.SetActive(false);
-                    UnityEngine.Object.FindObjectOfType<BombGenerator>().BombPrefabOverride = room.GetComponent<GameplayRoom>().BombPrefabOverride;
-                    Logger.Log("Room initialized");
-                }
+
+                GameplayRoom roomPrefab = rooms[UnityEngine.Random.Range(0, rooms.Count)];
+                UnityEngine.Object.Destroy((GameObject)gameplayStateRoomGOField.GetValue(SceneManager.Instance.GameplayState));
+                GameObject room = UnityEngine.Object.Instantiate(roomPrefab.gameObject, Vector3.zero, Quaternion.identity);
+                room.transform.parent = SceneManager.Instance.GameplayState.transform;
+                room.transform.localScale = Vector3.one;
+                gameplayStateRoomGOField.SetValue(SceneManager.Instance.GameplayState, room);
+                gameplayStateLightBulbField.SetValue(SceneManager.Instance.GameplayState, GameObject.Find("LightBulb"));
+                room.SetActive(false);
+                UnityEngine.Object.FindObjectOfType<BombGenerator>().BombPrefabOverride = room.GetComponent<GameplayRoom>().BombPrefabOverride;
+                Logger.Log("Room initialized");
             }
 
             //Subscribe to bomb events to correct data and dispatch custom ones
