@@ -1,0 +1,13 @@
+{
+    "FreePlay_BombsLabel": "Bomben",
+    "FreePlay_BombsScreenText": "BOMBEN:\n\nAnzahl der Bomben \nzum entschärfen",
+    "FreePlay_ModulesScreenText": "MODULE: \n\nAnzahl der Module\npro Bombe",
+    "BombBinder_TextBombs": {
+        "one": "{0} Bombe",
+        "other": "{0} Bomben"
+    },
+    "BombBinder_NeedABiggerRoom": {
+        "one": "Ein Raum, welcher mehr Bomben unterstützen kann, wird benötigt.\n\nAktueller Raum untersützt nur bis zu {0} Bombe. ",
+        "other": "Ein Raum, welcher mehr Bomben unterstützen kann, wird benötigt.\n\nAktueller Raum untersützt nur bis zu {0} Bomben. "
+    }
+}
