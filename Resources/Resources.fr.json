@@ -1,0 +1,14 @@
+{
+    "FreePlay_BombsLabel": "Bombes",
+    "FreePlay_BombsScreenText": "BOMBES:\n\nNombre de bombes \nà désamorcer",
+    "FreePlay_ModulesScreenText": "MODULES:\n\nNombre de modules\npar bombe",
+    "BombBinder_TextBombs": {
+        "one": "{0} Bombe",
+        "other": "{0} Bombes"
+    },
+    "BombBinder_NeedABiggerRoom": {
+        "one": "Une salle pouvant accueillir plus de bombes est requise.\n\nActuellement, les salles peuvent accueillir jusqu'à {0} bombe.",
+        "other": "Une salle pouvant accueillir plus de bombes est requise.\n\nActuellement, les salles peuvent accueillir jusqu'à {0} bombes."
+    },
+    "ModInfo_Description": "Quoi de mieux qu'une bombe ? Deux bombes ! Accélérez la cadence de jeu, et passez au niveau supérieur en essayant de désamorcer deux bombes différentes en même temps ! Deux numéros de séries, deux edgeworks, deux timers séparés et plus encore !\nLes paramètres de ce mod sont facilement modifiables depuis le menu de jeu libre.\nIl est compatible avec les mods de boîtiers de bombes et de salles, pour vous permettre une liberté dans la personnalisation du gameplay !\n\n[h1]Pour les moddeurs[/h1]\nLes différents APIs du mod sont accessibles à d'autres développeurs. Il est donc possible de personnaliser le spawn des bombes dans une salle de jeu ou de créer des missions avec plusieurs bombes et bien plus !\nPour toutes informations sur les fonctionnalités de ce mod ainsi que son utilisation, consultez les documents des APIs au lien suivant \n[url=https://lupo511.github.io/ktanemods/MultipleBombs/docs/]https://lupo511.github.io/ktanemods/MultipleBombs/docs/[/url].\n\n[h1]Crédits[/h1]\nPour la liste de tous les participants à ce projet un lien est mis à votre disposition\n[url=https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html]https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html[/url]."
+}
