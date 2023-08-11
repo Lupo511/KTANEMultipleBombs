@@ -1,0 +1,291 @@
+body {
+    background-color: white;
+    color: black;
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, Arial, sans-serif
+}
+
+.banner {
+    width: 100%;
+    height: 17.5em;
+    padding-top: 7.5em;
+    background-color: #1e1e1e;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white
+}
+
+.bannercontent {
+    margin-left: 2.5em
+}
+
+.bannertitle {
+    font-size: 5em
+}
+
+.bannersubtitle {
+    font-size: 1.8em
+}
+
+@media only all and (max-width: 45em) {
+    .banner {
+        height: auto;
+        padding-top: 6em;
+        padding-bottom: 2em
+    }
+
+    .bannercontent {
+        margin-left: 1em
+    }
+
+    .bannertitle {
+        font-size: 2.5em
+    }
+
+    .bannersubtitle {
+        font-size: 1em
+    }
+}
+
+.content {
+    width: 85%;
+    margin: 0 auto;
+    padding: 1.25em 0
+}
+
+ol.navigationmenu {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+
+ol.navigationmenu::after {
+    content: "";
+    display: block;
+    clear: both
+}
+
+ol.navigationmenu li, ol.navigationmenu span {
+    float: left;
+    height: 1.5em;
+    line-height: 1.5em;
+    padding: 0.1em;
+    font-size: 1.5em;
+    vertical-align: middle
+}
+
+ol.navigationmenu li a, ol.navigationmenu li a:hover, ol.navigationmenu li a:visited {
+    text-decoration-line: none;
+    color: black
+}
+
+ol.navigationmenu span.separator {
+    width: 0.2em;
+    height: 0.8em;
+    padding: 0;
+    margin: 0.4em 0.2em;
+    background-image: url("./images/Separator.svg");
+    background-size: 100% 100%
+}
+
+h1 {
+    font-weight: normal;
+    margin: 0.7em 0 0 0;
+    font-size: 2.5em
+}
+
+h2 {
+    font-weight: normal;
+    margin: 0.6em 0 0 0;
+    font-size: 1.8em
+}
+
+h3 {
+    font-weight: normal;
+    margin: 0.6em 0 0 0;
+    font-size: 1.4em
+}
+
+h3::before {
+    content: "";
+    display: block;
+    clear: both
+}
+
+p {
+    margin: 0.6em 0 0 0
+}
+
+a {
+    text-decoration-line: none;
+    color: #0366d6;
+    white-space: nowrap
+}
+
+a:visited {
+    color: #0366d6
+}
+
+a:hover {
+    color: #039dd6
+}
+
+button.green {
+    display: inline-block;
+    margin: 0;
+    border: 0;
+    padding: 0.7em;
+    background-color: rgb(0, 130, 0);
+    color: white;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 1em
+}
+
+button.green:hover {
+    background-color: rgb(0, 150, 0)
+}
+
+button.green:active {
+    background-color: rgb(0, 120, 0)
+}
+
+img.right {
+    float: right;
+    width: 17em
+}
+
+@media only all and (max-width: 45em) {
+    img.right {
+        float: none;
+        display: block;
+        margin: 0 auto
+    }
+}
+
+code {
+    font-family: Inconsolata, monospace
+}
+
+code.nowrap {
+    white-space: nowrap
+}
+
+pre {
+    margin: 0.6em 0 0 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(100, 100, 100);
+    padding: 0;
+    width: 100%;
+    overflow-x: scroll
+}
+
+ul {
+    margin: 0
+}
+
+table {
+    margin: 0.6em 0 0 0
+}
+
+table, th, td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(100, 100, 100);
+    border-collapse: collapse
+}
+
+th, td {
+    margin: 0;
+    padding: 0.4em
+}
+
+th {
+    font-weight: bold
+}
+
+code.cs span.comment {
+    color: green;
+}
+
+code.cs span.keyword {
+    color: blue;
+}
+
+code.cs span.class {
+    color: blue;
+}
+
+code.cs span.interface {
+    color: blue;
+}
+
+code.cs span.string {
+    color: red;
+}
+
+.credits {
+    text-align: center;
+}
+
+.credits p {
+    margin-top: 1.2em;
+    font-size: 1.2em;
+}
+
+.credits p:first-of-type {
+    margin-top: 0.6em;
+}
+
+.credits .job {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    box-sizing: border-box;
+    padding-right: calc(0.1em / 0.8);
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.credits .jobempty {
+    display: inline-block;
+    width: 50%;
+}
+
+.credits .name {
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+    box-sizing: border-box;
+    padding-left: 0.1em;
+}
+
+@media only all and (max-width: 45em) {
+    .credits p {
+        margin-top: 1.6em;
+    }
+
+    .credits .job {
+        width: 100%;
+        text-align: center;
+        padding-right: 0;
+    }
+
+    .credits .job:not(:first-child) {
+        margin-top: 0.8em;
+    }
+
+    .credits .jobempty {
+        display: none;
+    }
+
+    .credits .name {
+        width: 100%;
+        text-align: center;
+        padding-left: 0;
+    }
+}

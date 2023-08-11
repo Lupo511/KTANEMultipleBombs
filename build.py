@@ -75,6 +75,13 @@ def buildBundle(config):
     print("Mod bundle build completed")
     return 0
 
+def buildInfo():
+    print("Building info...")
+
+    copydir("./InfoFiles", "./Build/MultipleBombs")
+
+    print("Info build completed")
+
 def copy(ktanePath):
     print("Copying build to mods directory...")
     copydir("./Build/MultipleBombs", ktanePath + "/mods/MultipleBombs")
@@ -87,6 +94,8 @@ def buildAll(config):
     buildAssembly(config)
 
     buildBundle(config)
+
+    buildInfo()
 
     if("copyToModsFolder" in config and config["copyToModsFolder"] == True):
         copy(config["ktanePath"])
@@ -114,6 +123,8 @@ else:
             buildAssembly(config)
         elif target == "bundle":
             buildBundle(config)
+        elif target == "info":
+            buildInfo()
         elif target == "copy":
             copy(config["ktanePath"])
         elif target == "clean":
