@@ -31,12 +31,14 @@ MonoBehaviour:
     bombs and much more!
 
     To learn how to use it and for explanation about all of its features read the
-    API Docs at [url=https://lupo511.github.io/ktanemods/MultipleBombs/docs/]https://lupo511.github.io/ktanemods/MultipleBombs/docs/[/url].
+    API Docs in the [i]Info/docs/index.html[/i] file inside the mod''s folder or online
+    at [url=https://ktanemods.lupo511.net/MultipleBombs/docs/]https://ktanemods.lupo511.net/MultipleBombs/docs/[/url].
 
 
     [h1]Credits[/h1]
 
-    For a list of people that contributed to the mod, see the full credits at [url=https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html]https://lupo511.github.io/ktanemods/MultipleBombs/Credits.html[/url].'
+    For a list of people that contributed to the mod, see the full credits in the
+    [i]Info/Credits.html[/i] file in the mod''s folder or online at [url=https://ktanemods.lupo511.net/MultipleBombs/Credits.html]https://ktanemods.lupo511.net/MultipleBombs/Credits.html[/url].'
   version: 1.5.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: be95b037aca480441806d4efa6da4ce2, type: 3}
