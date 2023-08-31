@@ -19,11 +19,12 @@ namespace MultipleBombsAssembly
         private GameplayState gameplayState;
         private KMGameCommands gameCommands;
         private MultipleBombsMissionDetails currentMission;
-        private BombInfoProvider bombInfoProvider;
         private PaceMakerManager paceMakerManager;
         private Dictionary<Bomb, BombEvents.BombSolvedEvent> bombSolvedEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentPassEvent> bombComponentPassEvents;
         private Dictionary<Bomb, BombComponentEvents.ComponentStrikeEvent> bombComponentStrikeEvents;
+
+        public BombInfoProvider BombInfoProvider { get; private set; }
 
         static GameplayStateManager()
         {
@@ -62,7 +63,7 @@ namespace MultipleBombsAssembly
                 currentMission = MultipleBombsMissionDetails.ReadMission(mission, true, out multipleBombsComponentPools);
             }
 
-            bombInfoProvider = new BombInfoProvider(currentMission.BombCount);
+            BombInfoProvider = new BombInfoProvider(currentMission.BombCount);
 
             //Select a valid room for the required bomb count
             if (currentMission.BombCount > 1 && GameplayState.GameplayRoomPrefabOverride == null)
@@ -298,7 +299,7 @@ namespace MultipleBombsAssembly
             {
                 if (!knownBombInfos.Contains(info))
                 {
-                    bombInfoProvider.RedirectBombInfo(info, bomb);
+                    BombInfoProvider.RedirectBombInfo(info, bomb);
                     newBombInfos.Add(info);
                 }
             }
@@ -358,7 +359,7 @@ namespace MultipleBombsAssembly
                     BombEvents.OnBombSolved();
                 if (bombSolvedEvents.ContainsKey(source.Bomb) && bombSolvedEvents[source.Bomb] != null)
                     bombSolvedEvents[source.Bomb].Invoke();
-                bombInfoProvider.BombSolved(source.Bomb);
+                BombInfoProvider.BombSolved(source.Bomb);
 
                 SceneManager.Instance.GameplayState.OnBombSolved();
 

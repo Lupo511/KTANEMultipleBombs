@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace MultipleBombsAssembly
 {
+    //To-do: should this be available all the time instead of being confined to gameplay state? After all bomb infos can be used in every state
     public class BombInfoProvider
     {
         private int bombCount = 1;
@@ -23,6 +25,11 @@ namespace MultipleBombsAssembly
         {
             ModBombInfo modBombInfo = bombInfo.GetComponent<ModBombInfo>();
 
+            redirectBombInfo(bombInfo, modBombInfo, bomb);
+        }
+
+        private void redirectBombInfo(KMBombInfo bombInfo, ModBombInfo modBombInfo, Bomb bomb)
+        {
             DelegateUtils.RemoveAdd(ref bombInfo.TimeHandler, modBombInfo.GetTime, () => GetTime(bomb));
             DelegateUtils.RemoveAdd(ref bombInfo.FormattedTimeHandler, modBombInfo.GetFormattedTime, () => GetFormattedTime(bomb));
             DelegateUtils.RemoveAdd(ref bombInfo.StrikesHandler, modBombInfo.GetStrikes, () => GetStrikes(bomb));
@@ -40,6 +47,17 @@ namespace MultipleBombsAssembly
                 bombSolvedEvents[bomb] += modBombInfoSolvedEvent;
             else
                 bombSolvedEvents.Add(bomb, modBombInfoSolvedEvent);
+        }
+
+        public KMBombInfo CreateBombInfoForBomb(Bomb bomb)
+        {
+            GameObject infoGameObject = new GameObject("BombInfo");
+            KMBombInfo bombInfo = infoGameObject.AddComponent<KMBombInfo>();
+            ModBombInfo modBombInfo = infoGameObject.AddComponent<ModBombInfo>();
+
+            redirectBombInfo(bombInfo, modBombInfo, bomb);
+
+            return bombInfo;
         }
 
         internal float GetTime(Bomb bomb)

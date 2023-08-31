@@ -19,7 +19,7 @@ namespace MultipleBombsAssembly
 {
     public class MultipleBombs : MonoBehaviour
     {
-        public GameManager gameManager;
+        public GameManager GameManager { get; private set;  }
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
         public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
         private KMGameInfo gameInfo;
@@ -35,7 +35,7 @@ namespace MultipleBombsAssembly
             gameInfo = GetComponent<KMGameInfo>();
             gameCommands = GetComponent<KMGameCommands>();
 
-            gameManager = new GameManager(this, gameInfo, gameCommands);
+            GameManager = new GameManager(this, gameInfo, gameCommands);
 
             LastFreeplaySettings = new MultipleBombsFreeplaySettings(1);
 
@@ -55,12 +55,12 @@ namespace MultipleBombsAssembly
 
         public void Update()
         {
-            gameManager.Update();
+            GameManager.Update();
         }
 
         public void LateUpdate()
         {
-            gameManager.LateUpdate();
+            GameManager.LateUpdate();
         }
 
         public IEnumerator UpdateCoroutine()
@@ -68,7 +68,7 @@ namespace MultipleBombsAssembly
             yield return null;
             while (true)
             {
-                gameManager.CoroutineUpdate();
+                GameManager.CoroutineUpdate();
                 yield return null;
             }
         }
@@ -89,7 +89,7 @@ namespace MultipleBombsAssembly
         //This is the interface for Factory
         private Bomb createBomb(int bombIndex, Vector3 position, Vector3 eulerAngles, int seed, List<KMBombInfo> knownBombInfos)
         {
-            if (!(gameManager.CurrentState is GameplayStateManager gameplayStateManager))
+            if (!(GameManager.CurrentState is GameplayStateManager gameplayStateManager))
                 throw new InvalidOperationException("Bombs can only be spawned while in the Gameplay state.");
 
             MultipleBombsMissionDetails mission = null;
@@ -121,7 +121,7 @@ namespace MultipleBombsAssembly
         {
             get
             {
-                if (gameManager.CurrentState is SetupStateManager setupStateManager)
+                if (GameManager.CurrentState is SetupStateManager setupStateManager)
                     return setupStateManager.FreeplayDeviceManager.FreeplayBombCount;
                 else
                     return LastFreeplaySettings.BombCount;
@@ -134,7 +134,7 @@ namespace MultipleBombsAssembly
                     throw new Exception("The bomb count must be greater than 0.");
                 if (value > MultipleBombsModManager.GetMaximumBombs())
                     throw new Exception("The specified bomb count is greater than the current maximum bomb count.");
-                ((SetupStateManager)gameManager.CurrentState).FreeplayDeviceManager.FreeplayBombCount = value;
+                ((SetupStateManager)GameManager.CurrentState).FreeplayDeviceManager.FreeplayBombCount = value;
             }
         }
     }
