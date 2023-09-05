@@ -13,7 +13,7 @@ namespace MultipleBombsAssembly
         {
             AddProperty("CurrentMaximumBombCount", () => MultipleBombsModManager.GetMaximumBombs(), null);
             AddProperty("CurrentFreePlayBombCount", () => { return MultipleBombs.CurrentFreeplayBombCount; }, (object value) => { MultipleBombs.CurrentFreeplayBombCount = (int)value; });
-            AddProperty("CreateBombInfoForBomb", () => new Func<KMBomb, KMBombInfo>((kmBomb) =>
+            AddProperty("GetBombInfoForBomb", () => new Func<KMBomb, KMBombInfo>((kmBomb) =>
             {
                 Bomb bomb = kmBomb.GetComponent<Bomb>();
                 if (bomb == null)
