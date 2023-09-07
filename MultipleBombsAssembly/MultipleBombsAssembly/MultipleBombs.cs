@@ -19,7 +19,7 @@ namespace MultipleBombsAssembly
 {
     public class MultipleBombs : MonoBehaviour
     {
-        public GameManager GameManager { get; private set;  }
+        private GameManager gameManager; //The private field is only temporarily kept to fix Tweaks from breaking (it should just be an automatic public property)
         public MultipleBombsFreeplaySettings LastFreeplaySettings { get; set; }
         public GameplayMusicControllerManager GameplayMusicControllerManager { get; set; }
         private KMGameInfo gameInfo;
@@ -116,6 +116,8 @@ namespace MultipleBombsAssembly
 
             return gameplayStateManager.CreateBomb(generatorSetting, position, eulerAngles, seed, knownBombInfos);
         }
+
+        public GameManager GameManager { get => gameManager; private set => gameManager = value; }
 
         public int CurrentFreeplayBombCount
         {
