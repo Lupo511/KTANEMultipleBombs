@@ -137,6 +137,16 @@ namespace MultipleBombsAssembly
                 mission.GeneratorSetting.ComponentPools.AddRange(multipleBombsComponentPools);
             }
 
+            //Read current mission again in case any mod like Factory has modified the component pools
+            if (GameplayState.MissionToLoad == FreeplayMissionGenerator.FREEPLAY_MISSION_ID)
+            {
+                currentMission = new MultipleBombsMissionDetails(multipleBombs.CurrentFreeplayBombCount, mission.GeneratorSetting);
+            }
+            else
+            {
+                currentMission = MultipleBombsMissionDetails.ReadMission(mission, false, out _);
+            }
+
             Logger.Log("Setting up bombs");
 
             Logger.Log("Bombs to spawn: " + currentMission.BombCount);
